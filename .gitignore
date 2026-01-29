@@ -1,0 +1,96 @@
+# CRITICAL: Secrets & Credentials
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+secrets/
+credentials/
+.env.generated
+
+# Customer Data (DSGVO Protected)
+data/lakehouse/*/
+data/loras/*/
+!data/lakehouse/sample/
+data/uploads/*/
+deployments/*/
+customer-data/
+backups/
+/tmp/lakehouse/
+/var/lib/0711/
+
+# Build Artifacts & Dependencies
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+node_modules/
+.next/
+out/
+dist/
+build/
+*.egg-info/
+.eggs/
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Databases & Logs
+*.sqlite
+*.db
+*.log
+*.pid
+logs/
+redis-data/
+postgres-data/
+minio-data/
+
+# Models (download on deployment)
+models/*.bin
+models/*.safetensors
+models/*/
+*.gguf
+huggingface_cache/
+.cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+.claude/
+
+# OS
+Thumbs.db
+.Spotlight-V100
+.Trashes
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+test-results/
+coverage.xml
+*.cover
+.hypothesis/
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Archives & Backups
+*.tar.gz
+*.zip
+*.bak
+*~

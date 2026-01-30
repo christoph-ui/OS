@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation';
 import { colors } from '@/lib/theme';
 import { 
   Sparkles, Zap, Database, Share2, Shield, Clock,
-  ArrowRight, Check, MessageSquare, BarChart3, Package
+  ArrowRight, Check, MessageSquare, BarChart3, Package,
+  Users, Briefcase, Building2, Star, GraduationCap, Handshake
 } from 'lucide-react';
 
 export default function HomePage() {
@@ -52,27 +53,52 @@ export default function HomePage() {
     },
   ];
 
-  const onboardingOptions = [
+  const userTypes = [
     {
-      id: 'quick',
-      title: 'Quick Setup',
-      subtitle: '4 steps • ~5 minutes',
-      description: 'Upload your files, let AI analyze and deploy automatically.',
-      icon: <Zap size={32} />,
+      id: 'customer',
+      title: 'For Businesses',
+      subtitle: 'Distributors & Manufacturers',
+      description: 'Manage your product data, enrich with AI, publish everywhere.',
+      icon: <Building2 size={32} />,
       color: colors.orange,
-      features: ['AI file analysis', 'Smart recommendations', 'One-click deploy'],
-      href: '/onboarding',
+      actions: [
+        { label: 'Start Onboarding', href: '/onboarding', primary: true },
+        { label: 'Login', href: '/login', primary: false },
+      ],
     },
     {
-      id: 'guided',
-      title: 'Guided Setup',
-      subtitle: '7 steps • ~15 minutes',
-      description: 'Step-by-step wizard with detailed explanations.',
-      icon: <Package size={32} />,
-      color: colors.blue,
-      features: ['Detailed explanations', 'Manual configuration', 'Full control'],
-      href: '/onboarding',
+      id: 'expert',
+      title: 'For Experts',
+      subtitle: 'Tax, Legal, ETIM, Data Specialists',
+      description: 'Offer your expertise to businesses. Get paid for consultations.',
+      icon: <GraduationCap size={32} />,
+      color: colors.blue || '#6a9bcc',
+      actions: [
+        { label: 'Browse Experts', href: '/experts', primary: false },
+        { label: 'Become an Expert', href: '/expert-signup', primary: true },
+      ],
     },
+    {
+      id: 'partner',
+      title: 'For Partners',
+      subtitle: 'Agencies & Consultants',
+      description: 'Manage multiple clients, white-label solutions, earn commissions.',
+      icon: <Handshake size={32} />,
+      color: colors.green || '#788c5d',
+      actions: [
+        { label: 'Partner Portal', href: '/partner', primary: false },
+        { label: 'Become a Partner', href: '/partner-signup', primary: true },
+      ],
+    },
+  ];
+
+  const expertCategories = [
+    { name: 'Tax & Finance', count: 24, icon: '💰' },
+    { name: 'ETIM & Classification', count: 18, icon: '🏭' },
+    { name: 'Legal & Compliance', count: 12, icon: '⚖️' },
+    { name: 'Data & PIM', count: 31, icon: '📊' },
+    { name: 'E-Commerce', count: 27, icon: '🛒' },
+    { name: 'Tender & Procurement', count: 9, icon: '📋' },
   ];
 
   return (
@@ -121,13 +147,17 @@ export default function HomePage() {
               color: colors.dark,
               fontFamily: "'Poppins', sans-serif",
             }}>
-              0711 Console
+              0711
             </span>
           </div>
 
-          <nav style={{ display: 'flex', alignItems: 'center', gap: 32 }}>
+          <nav style={{ display: 'flex', alignItems: 'center', gap: 24 }}>
             <a href="#features" style={{ color: colors.midGray, textDecoration: 'none', fontSize: 14 }}>Features</a>
+            <a href="/experts" style={{ color: colors.midGray, textDecoration: 'none', fontSize: 14 }}>Experts</a>
             <a href="#start" style={{ color: colors.midGray, textDecoration: 'none', fontSize: 14 }}>Get Started</a>
+            <a href="/partner" style={{ color: colors.midGray, textDecoration: 'none', fontSize: 14 }}>Partners</a>
+            
+            <div style={{ width: 1, height: 20, backgroundColor: colors.lightGray, margin: '0 8px' }} />
             
             {isLoggedIn ? (
               <button
@@ -205,7 +235,7 @@ export default function HomePage() {
           }}>
             <Sparkles size={16} color={colors.orange} />
             <span style={{ fontSize: 14, color: colors.orange, fontWeight: 500 }}>
-              AI-Powered Product Intelligence
+              AI-Powered B2B Intelligence Platform
             </span>
           </div>
 
@@ -230,11 +260,11 @@ export default function HomePage() {
             marginLeft: 'auto',
             marginRight: 'auto',
           }}>
-            Import your product data. Let AI enrich it. Publish to every channel. 
-            German B2B intelligence platform for distributors and manufacturers.
+            Import product data. Enrich with AI. Publish to every channel. 
+            Connect with domain experts. German B2B intelligence platform.
           </p>
 
-          <div style={{ display: 'flex', gap: 16, justifyContent: 'center' }}>
+          <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
             <button
               onClick={() => router.push('/onboarding')}
               style={{
@@ -255,7 +285,7 @@ export default function HomePage() {
               Start Onboarding
             </button>
             <button
-              onClick={() => router.push('/login')}
+              onClick={() => router.push('/experts')}
               style={{
                 padding: '16px 32px',
                 backgroundColor: 'white',
@@ -270,9 +300,120 @@ export default function HomePage() {
                 gap: 8,
               }}
             >
-              <MessageSquare size={20} />
-              Login to Console
+              <Users size={20} />
+              Find an Expert
             </button>
+          </div>
+        </div>
+      </section>
+
+      {/* User Types Section */}
+      <section id="start" style={{
+        padding: '80px 40px',
+        backgroundColor: 'white',
+      }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: 48 }}>
+            <h2 style={{
+              fontSize: 36,
+              fontWeight: 700,
+              color: colors.dark,
+              margin: '0 0 16px',
+              fontFamily: "'Poppins', sans-serif",
+            }}>
+              Choose your path
+            </h2>
+            <p style={{ fontSize: 18, color: colors.midGray, margin: 0 }}>
+              Whether you're a business, expert, or partner — we've got you covered.
+            </p>
+          </div>
+
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: 24,
+          }}>
+            {userTypes.map((type) => (
+              <div
+                key={type.id}
+                style={{
+                  padding: 32,
+                  backgroundColor: colors.light,
+                  borderRadius: 16,
+                  border: `2px solid transparent`,
+                  transition: 'all 0.2s',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = type.color;
+                  e.currentTarget.style.transform = 'translateY(-4px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'transparent';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
+              >
+                <div style={{
+                  width: 64,
+                  height: 64,
+                  borderRadius: 16,
+                  backgroundColor: type.color + '15',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: type.color,
+                  marginBottom: 20,
+                }}>
+                  {type.icon}
+                </div>
+
+                <h3 style={{
+                  fontSize: 22,
+                  fontWeight: 600,
+                  color: colors.dark,
+                  margin: '0 0 4px',
+                }}>
+                  {type.title}
+                </h3>
+                <p style={{
+                  fontSize: 14,
+                  color: type.color,
+                  fontWeight: 500,
+                  margin: '0 0 12px',
+                }}>
+                  {type.subtitle}
+                </p>
+                <p style={{
+                  fontSize: 15,
+                  color: colors.midGray,
+                  lineHeight: 1.6,
+                  margin: '0 0 24px',
+                }}>
+                  {type.description}
+                </p>
+
+                <div style={{ display: 'flex', gap: 12 }}>
+                  {type.actions.map((action, i) => (
+                    <button
+                      key={i}
+                      onClick={() => router.push(action.href)}
+                      style={{
+                        flex: 1,
+                        padding: '12px 16px',
+                        backgroundColor: action.primary ? type.color : 'white',
+                        color: action.primary ? 'white' : colors.dark,
+                        border: action.primary ? 'none' : `1px solid ${colors.lightGray}`,
+                        borderRadius: 8,
+                        fontSize: 14,
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      {action.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -280,7 +421,7 @@ export default function HomePage() {
       {/* Features Section */}
       <section id="features" style={{
         padding: '80px 40px',
-        backgroundColor: 'white',
+        backgroundColor: colors.light,
       }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 60 }}>
@@ -291,7 +432,7 @@ export default function HomePage() {
               margin: '0 0 16px',
               fontFamily: "'Poppins', sans-serif",
             }}>
-              Everything you need for B2B product data
+              Everything for B2B product data
             </h2>
             <p style={{ fontSize: 18, color: colors.midGray, margin: 0 }}>
               From import to all channels — one platform, one day.
@@ -308,7 +449,7 @@ export default function HomePage() {
                 key={i}
                 style={{
                   padding: 32,
-                  backgroundColor: colors.light,
+                  backgroundColor: 'white',
                   borderRadius: 16,
                   border: `1px solid ${colors.lightGray}`,
                 }}
@@ -348,150 +489,188 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Onboarding Choice Section */}
-      <section id="start" style={{
+      {/* Experts Section */}
+      <section style={{
         padding: '80px 40px',
-        backgroundColor: colors.light,
+        backgroundColor: 'white',
       }}>
-        <div style={{ maxWidth: 900, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: 48 }}>
-            <h2 style={{
-              fontSize: 36,
-              fontWeight: 700,
-              color: colors.dark,
-              margin: '0 0 16px',
-              fontFamily: "'Poppins', sans-serif",
-            }}>
-              Choose your setup
-            </h2>
-            <p style={{ fontSize: 18, color: colors.midGray, margin: 0 }}>
-              Quick AI-powered setup or detailed guided wizard — your choice.
-            </p>
+        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 40 }}>
+            <div>
+              <h2 style={{
+                fontSize: 36,
+                fontWeight: 700,
+                color: colors.dark,
+                margin: '0 0 12px',
+                fontFamily: "'Poppins', sans-serif",
+              }}>
+                Connect with Experts
+              </h2>
+              <p style={{ fontSize: 18, color: colors.midGray, margin: 0 }}>
+                Domain specialists ready to help with tax, legal, data, and more.
+              </p>
+            </div>
+            <button
+              onClick={() => router.push('/experts')}
+              style={{
+                padding: '12px 24px',
+                backgroundColor: colors.blue || '#6a9bcc',
+                color: 'white',
+                border: 'none',
+                borderRadius: 10,
+                fontSize: 14,
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+              }}
+            >
+              Browse All Experts <ArrowRight size={16} />
+            </button>
           </div>
 
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(2, 1fr)',
-            gap: 24,
+            gridTemplateColumns: 'repeat(6, 1fr)',
+            gap: 16,
           }}>
-            {onboardingOptions.map((option) => (
+            {expertCategories.map((cat, i) => (
               <button
-                key={option.id}
-                onClick={() => router.push(option.href + (option.id === 'quick' ? '/smart' : '/guided'))}
+                key={i}
+                onClick={() => router.push(`/experts?category=${encodeURIComponent(cat.name)}`)}
                 style={{
-                  padding: 32,
-                  backgroundColor: 'white',
-                  border: `2px solid ${colors.lightGray}`,
-                  borderRadius: 16,
+                  padding: 24,
+                  backgroundColor: colors.light,
+                  border: `1px solid ${colors.lightGray}`,
+                  borderRadius: 12,
                   cursor: 'pointer',
-                  textAlign: 'left',
-                  transition: 'all 0.2s ease',
+                  textAlign: 'center',
+                  transition: 'all 0.2s',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = option.color;
-                  e.currentTarget.style.transform = 'translateY(-4px)';
-                  e.currentTarget.style.boxShadow = '0 12px 40px rgba(0,0,0,0.08)';
+                  e.currentTarget.style.borderColor = colors.blue || '#6a9bcc';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.borderColor = colors.lightGray;
                   e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = 'none';
                 }}
               >
-                <div style={{
-                  width: 64,
-                  height: 64,
-                  borderRadius: 16,
-                  backgroundColor: option.color + '15',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: option.color,
-                  marginBottom: 20,
-                }}>
-                  {option.icon}
+                <div style={{ fontSize: 32, marginBottom: 12 }}>{cat.icon}</div>
+                <div style={{ fontSize: 14, fontWeight: 600, color: colors.dark, marginBottom: 4 }}>
+                  {cat.name}
                 </div>
-
-                <h3 style={{
-                  fontSize: 24,
-                  fontWeight: 600,
-                  color: colors.dark,
-                  margin: '0 0 4px',
-                }}>
-                  {option.title}
-                </h3>
-
-                <p style={{
-                  fontSize: 14,
-                  color: option.color,
-                  fontWeight: 500,
-                  margin: '0 0 16px',
-                }}>
-                  {option.subtitle}
-                </p>
-
-                <p style={{
-                  fontSize: 15,
-                  color: colors.midGray,
-                  lineHeight: 1.6,
-                  margin: '0 0 20px',
-                }}>
-                  {option.description}
-                </p>
-
-                <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                  {option.features.map((feature, i) => (
-                    <li key={i} style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: 8,
-                      fontSize: 14,
-                      color: colors.dark,
-                      marginBottom: 8,
-                    }}>
-                      <Check size={16} color={option.color} />
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-
-                <div style={{
-                  marginTop: 24,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 8,
-                  fontSize: 14,
-                  fontWeight: 600,
-                  color: option.color,
-                }}>
-                  Get Started <ArrowRight size={16} />
+                <div style={{ fontSize: 12, color: colors.midGray }}>
+                  {cat.count} experts
                 </div>
               </button>
             ))}
           </div>
 
-          <p style={{
-            textAlign: 'center',
+          <div style={{
             marginTop: 32,
-            fontSize: 14,
-            color: colors.midGray,
+            padding: 32,
+            backgroundColor: (colors.blue || '#6a9bcc') + '10',
+            borderRadius: 16,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
           }}>
-            Already have an account?{' '}
-            <a 
-              href="/login" 
-              style={{ color: colors.orange, fontWeight: 500, textDecoration: 'none' }}
+            <div>
+              <h3 style={{ fontSize: 20, fontWeight: 600, color: colors.dark, margin: '0 0 8px' }}>
+                Are you an expert?
+              </h3>
+              <p style={{ fontSize: 15, color: colors.midGray, margin: 0 }}>
+                Share your knowledge, help businesses, earn money. Join our expert network.
+              </p>
+            </div>
+            <button
+              onClick={() => router.push('/expert-signup')}
+              style={{
+                padding: '14px 28px',
+                backgroundColor: colors.blue || '#6a9bcc',
+                color: 'white',
+                border: 'none',
+                borderRadius: 10,
+                fontSize: 15,
+                fontWeight: 600,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+              }}
             >
-              Login here
-            </a>
-          </p>
+              <Star size={18} />
+              Become an Expert
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Quick Links Section */}
+      <section style={{
+        padding: '60px 40px',
+        backgroundColor: colors.dark,
+      }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, 1fr)',
+            gap: 40,
+          }}>
+            <div>
+              <h4 style={{ color: 'white', fontSize: 14, fontWeight: 600, marginBottom: 16 }}>
+                For Businesses
+              </h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <a href="/onboarding/smart" style={{ color: colors.midGray, textDecoration: 'none', fontSize: 14 }}>Quick Setup (4 steps)</a>
+                <a href="/onboarding/guided" style={{ color: colors.midGray, textDecoration: 'none', fontSize: 14 }}>Guided Setup (7 steps)</a>
+                <a href="/login" style={{ color: colors.midGray, textDecoration: 'none', fontSize: 14 }}>Customer Login</a>
+                <a href="/dashboard" style={{ color: colors.midGray, textDecoration: 'none', fontSize: 14 }}>Dashboard</a>
+              </div>
+            </div>
+            <div>
+              <h4 style={{ color: 'white', fontSize: 14, fontWeight: 600, marginBottom: 16 }}>
+                For Experts
+              </h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <a href="/experts" style={{ color: colors.midGray, textDecoration: 'none', fontSize: 14 }}>Browse Experts</a>
+                <a href="/expert-signup" style={{ color: colors.midGray, textDecoration: 'none', fontSize: 14 }}>Become an Expert</a>
+                <a href="/expert-login" style={{ color: colors.midGray, textDecoration: 'none', fontSize: 14 }}>Expert Login</a>
+                <a href="/bookings" style={{ color: colors.midGray, textDecoration: 'none', fontSize: 14 }}>My Bookings</a>
+              </div>
+            </div>
+            <div>
+              <h4 style={{ color: 'white', fontSize: 14, fontWeight: 600, marginBottom: 16 }}>
+                For Partners
+              </h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <a href="/partner" style={{ color: colors.midGray, textDecoration: 'none', fontSize: 14 }}>Partner Portal</a>
+                <a href="/partner-signup" style={{ color: colors.midGray, textDecoration: 'none', fontSize: 14 }}>Become a Partner</a>
+                <a href="/partner-login" style={{ color: colors.midGray, textDecoration: 'none', fontSize: 14 }}>Partner Login</a>
+              </div>
+            </div>
+            <div>
+              <h4 style={{ color: 'white', fontSize: 14, fontWeight: 600, marginBottom: 16 }}>
+                Platform
+              </h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <a href="/connectors" style={{ color: colors.midGray, textDecoration: 'none', fontSize: 14 }}>Connectors</a>
+                <a href="/models" style={{ color: colors.midGray, textDecoration: 'none', fontSize: 14 }}>AI Models</a>
+                <a href="/developer" style={{ color: colors.midGray, textDecoration: 'none', fontSize: 14 }}>Developers</a>
+                <a href="/admin" style={{ color: colors.midGray, textDecoration: 'none', fontSize: 14 }}>Admin</a>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Footer */}
       <footer style={{
-        padding: '40px',
+        padding: '24px 40px',
         backgroundColor: colors.dark,
-        color: colors.midGray,
+        borderTop: `1px solid ${colors.midGray}33`,
       }}>
         <div style={{
           maxWidth: 1200,
@@ -502,9 +681,9 @@ export default function HomePage() {
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <span style={{ color: colors.orange, fontWeight: 700 }}>0711</span>
-            <span>German B2B Intelligence Platform</span>
+            <span style={{ color: colors.midGray, fontSize: 14 }}>German B2B Intelligence Platform</span>
           </div>
-          <div style={{ fontSize: 14 }}>
+          <div style={{ fontSize: 14, color: colors.midGray }}>
             © 2026 0711 GmbH · Stuttgart
           </div>
         </div>

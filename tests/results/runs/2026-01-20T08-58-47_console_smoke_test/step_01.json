@@ -1,0 +1,16 @@
+{
+  "journey_id": "console_smoke_test",
+  "step_number": 1,
+  "step_name": "Load Data Browser",
+  "status": "pass",
+  "console_errors": [],
+  "network_failures": [],
+  "suggestions": [
+    "Page loads correctly",
+    "All navigation items visible",
+    "Product categories showing counts"
+  ],
+  "timestamp": "2026-01-20T08:58:47.460Z",
+  "duration_ms": null,
+  "screenshot_filename": null
+}

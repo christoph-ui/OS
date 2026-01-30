@@ -1,0 +1,17 @@
+# Embedding Server Dependencies
+# Lightweight - runs alongside vLLM
+
+# Web framework
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+
+# ML
+torch>=2.1.0
+sentence-transformers>=2.3.0
+
+# HTTP client
+httpx>=0.26.0
+
+# Config
+pydantic>=2.5.0
+pydantic-settings>=2.1.0

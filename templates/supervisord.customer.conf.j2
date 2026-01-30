@@ -1,0 +1,84 @@
+# Supervisord Configuration for {{ customer_name }} ({{ customer_id }})
+# Generated: {{ timestamp }}
+#
+# Services:
+#   - init-database (priority 50, runs once)
+#   - lakehouse (priority 100, port {{ port_lakehouse }})
+#   - console-backend (priority 200, port {{ port_backend }})
+#   - console-frontend (priority 300, port {{ port_frontend }})
+
+[supervisord]
+nodaemon=true
+logfile=/dev/null
+logfile_maxbytes=0
+pidfile=/var/run/supervisord.pid
+loglevel=info
+
+# =============================================================================
+# Database Initialization (runs once on startup)
+# =============================================================================
+
+[program:init-database]
+command=/app/init_console_db.sh
+autostart=true
+autorestart=false
+startsecs=0
+stdout_logfile=/dev/fd/1
+stdout_logfile_maxbytes=0
+stderr_logfile=/dev/fd/2
+stderr_logfile_maxbytes=0
+priority=50
+
+# =============================================================================
+# Lakehouse API Service
+# =============================================================================
+
+[program:lakehouse]
+command=uvicorn lakehouse.server:app --host 0.0.0.0 --port {{ port_lakehouse }}
+directory=/app
+environment=LAKEHOUSE_PATH="/data/lakehouse",CUSTOMER_ID="{{ customer_id }}"
+autostart=true
+autorestart=true
+startretries=10
+stdout_logfile=/dev/fd/1
+stdout_logfile_maxbytes=0
+stderr_logfile=/dev/fd/2
+stderr_logfile_maxbytes=0
+priority=100
+startsecs=5
+
+# =============================================================================
+# Console Backend Service
+# =============================================================================
+
+[program:console-backend]
+command=uvicorn console.backend.main:app --host 0.0.0.0 --port {{ port_backend }}
+directory=/app
+environment=CUSTOMER_ID="{{ customer_id }}",LAKEHOUSE_URL="http://localhost:{{ port_lakehouse }}",DATABASE_URL="{{ database_url }}",PYTHONPATH="/app",HOST="0.0.0.0",PORT="{{ port_backend }}",CONSOLE_DEBUG="true",CORS_ORIGINS="http://localhost:{{ port_frontend }}"
+autostart=true
+autorestart=true
+startretries=10
+stdout_logfile=/dev/fd/1
+stdout_logfile_maxbytes=0
+stderr_logfile=/dev/fd/2
+stderr_logfile_maxbytes=0
+priority=200
+startsecs=5
+
+# =============================================================================
+# Console Frontend Service
+# =============================================================================
+
+[program:console-frontend]
+command=npm start -- -p {{ port_frontend }}
+directory=/app/console-frontend
+environment=NEXT_PUBLIC_API_URL="http://localhost:{{ port_backend }}",NEXT_PUBLIC_CUSTOMER_ID="{{ customer_id }}"
+autostart=true
+autorestart=true
+startretries=10
+stdout_logfile=/dev/fd/1
+stdout_logfile_maxbytes=0
+stderr_logfile=/dev/fd/2
+stderr_logfile_maxbytes=0
+priority=300
+startsecs=10

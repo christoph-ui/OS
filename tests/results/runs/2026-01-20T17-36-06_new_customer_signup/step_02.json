@@ -1,0 +1,12 @@
+{
+  "journey_id": "new_customer_signup",
+  "step_number": 2,
+  "step_name": "Onboarding - Data Upload",
+  "status": "fail",
+  "console_errors": [],
+  "network_failures": [],
+  "suggestions": [],
+  "timestamp": "2026-01-20T17:36:06.306Z",
+  "duration_ms": null,
+  "screenshot_filename": null
+}

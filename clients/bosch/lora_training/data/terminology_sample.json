@@ -1,0 +1,50 @@
+[
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "Du bist ein Experte für Bosch Thermotechnik Produktnomenklatur. Deine Aufgabe ist es, generische oder umgangssprachliche Produktbezeichnungen in korrekte Bosch-Terminologie zu konvertieren."
+      },
+      {
+        "role": "user",
+        "content": "Korrigiere die Produktbezeichnung: Ausdehnungsgefäß"
+      },
+      {
+        "role": "assistant",
+        "content": "Bosch MAG WP 12/0,5 (3 bar)"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "Du bist ein Experte für Bosch Thermotechnik Produktnomenklatur. Deine Aufgabe ist es, generische oder umgangssprachliche Produktbezeichnungen in korrekte Bosch-Terminologie zu konvertieren."
+      },
+      {
+        "role": "user",
+        "content": "Beschreibe das Bosch-Produkt mit Artikelnummer 7739617395"
+      },
+      {
+        "role": "assistant",
+        "content": "Produktbezeichnung: CS7001iAW 5 ORM-S\n\nTypformel: CS7001iAW 5 ORM-S\nKlasse für die jahreszeitbedingte Raumheizungs-Energieeffizienz (55°C Vorlauftemperatur): A++\nEnergieeffizienzklassen-Spektrum: A+++ -> D\nJahreszeitbedingte Raumheizungs-Energieeffizienz bei durchschnittlichen Klimaverhältnissen (55°C Vorlauftemperatur): 131 %\nNennwärmeleistung bei durchschnittlichen Klimaverhältnissen (55°C Vorlauftemperatur): 4 kW\nSchallleistungspegel im Freien: 53 dB (A)\nKlasse für die Warmwasserbereitungs-Energieeffizienz: A\nEnergieeffizienzklassen-Spektrum: A+ -> F\nWarmwasserbereitungs-Energieeffizienz bei durchschnittl. Klima: 96 %\nLastprofil: L\nUmwelttechnischer Hinweis: Enthält fluorierte Treibhausgase\nKältemitteltyp: R410A\nTreibhauspotential des Kältemittels (GWP): 2088 kgCO2-eq\nKältemittel-Füllmenge: 1,7 kg\nCO2-Äquivalent der Kältemittel-Füllmenge: 3,55 toCO2-eq\nBauart des Kältekreises: Hermetisch geschlossen\nHeizleistung +7/35°C nach EN 14511: 2,1 kW\nCOP +7/35°C nach EN 14511: 4,7 -\nHeizleistung +2/35 °C nach EN 14511: 2,7 kW\nCOP +2/35°C nach EN 14511: 4 -\nHeizleistung -7/35°C nach EN 14511: 4,7 kW\nCOP -7/35°C nach EN 14511: 2,8 -\nKühlleistung bei A35/W7 nach EN 14511: 4,1 kW\nEER bei A35/W7 nach EN 14511: 3,1 -\nLuftvolumenstrom nom.: 4500 m³/h\nAußenlufttemperatur min.: -20 °C\nAußenlufttemperatur max.: 35 °C\nElektrischer Anschluss: 230 V\nElektrische Frequenz: 50 Hz\nAbsicherung: 10 A\nKältemittelmenge R410A: 1,7 kg\nBreite: 930 mm\nTiefe: 440 mm\nHöhe: 1380 mm\nNettogewicht (ohne Verkleidung): 106 kg\nInhalt Warmwasserspeicher: 190 l\nElektrischer Zuheizer: 9 kW\nAusdehnungsgefäß: 10 l\nBreite: 600 mm\nTiefe: 650 mm\nHöhe: 1800 mm\nNettogewicht: 145 kg\nHersteller: Bosch Thermotechnik GmbH\nBestell-Nr.: 7739617395\nBestell-Nr.: 7739617395\nVerpackungsabmessung: 440x930x1380 mm\nGesamtgewicht inkl. Verpackung: 258 kg\nbestehend aus:\n· BOSCH Luftwärmepumpe CS7001i AW 5 OR-S, Außeneinheit Monoblock-WP, 1370x930x440, Bestell-Nr.: 8738210255\n· BOSCH Hydraulikeinheit AWM 9, Stücklistenkomponente Monobl.-Wärmepumpe, Bestell-Nr.: 8738209119"
+      }
+    ]
+  },
+  {
+    "messages": [
+      {
+        "role": "system",
+        "content": "Du bist ein Experte für Bosch Thermotechnik Produktnomenklatur. Deine Aufgabe ist es, generische oder umgangssprachliche Produktbezeichnungen in korrekte Bosch-Terminologie zu konvertieren."
+      },
+      {
+        "role": "user",
+        "content": "Korrigiere die Produktbezeichnung: Ausdehnungsgefäß"
+      },
+      {
+        "role": "assistant",
+        "content": "Bosch MAG 18/1,5 (3 bar)"
+      }
+    ]
+  }
+]

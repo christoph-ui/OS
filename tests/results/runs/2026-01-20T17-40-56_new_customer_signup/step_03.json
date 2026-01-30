@@ -1,0 +1,12 @@
+{
+  "journey_id": "new_customer_signup",
+  "step_number": 3,
+  "step_name": "Full Onboarding Complete",
+  "status": "pass",
+  "console_errors": [],
+  "network_failures": [],
+  "suggestions": [],
+  "timestamp": "2026-01-20T17:40:56.806Z",
+  "duration_ms": null,
+  "screenshot_filename": null
+}

@@ -1,0 +1,14 @@
+[
+  {
+    "run_id": "2026-01-20T08-59-03_console_smoke_test",
+    "report_id": "ux_review_085903",
+    "priority": "low",
+    "added_at": "2026-01-20T09:59:03.554923"
+  },
+  {
+    "run_id": "2026-01-20T09-17-08_new_customer_with_team",
+    "report_id": "error_analysis_091708",
+    "priority": "critical",
+    "added_at": "2026-01-20T10:17:08.967399"
+  }
+]

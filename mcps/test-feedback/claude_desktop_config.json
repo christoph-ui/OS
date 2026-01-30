@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "test-feedback": {
+      "command": "ssh",
+      "args": [
+        "christoph.bertsch@192.168.145.10",
+        "cd /home/christoph.bertsch/0711/0711-OS/mcps/test-feedback && ./start.sh mcp"
+      ]
+    }
+  }
+}

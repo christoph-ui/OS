@@ -1,0 +1,31 @@
+# Example Customer Configuration for 0711 Console Builder
+# Copy this file and customize for your customer
+
+customer_id: example
+customer_name: Example GmbH
+
+# Path to processed customer data (must contain lakehouse/, minio/, config.json)
+data_path: /tmp/example-data/processed
+
+# Deployment configuration
+deployment_type: on-premise  # Options: on-premise, cloud, hybrid
+version: "1.0"
+
+# Database credentials
+postgres_password: example123
+
+# Admin user credentials
+admin_password: Example2026
+
+# Optional: Explicit port allocation (auto-calculated if omitted)
+# ports:
+#   lakehouse: 9320
+#   backend: 9321
+#   frontend: 9322
+#   postgres: 5440
+
+# Optional: MCP configuration
+# enabled_mcps:
+#   - ctax
+#   - law
+#   - etim

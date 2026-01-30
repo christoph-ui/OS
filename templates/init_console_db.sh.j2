@@ -1,0 +1,97 @@
+#!/bin/bash
+# Database Initialization Script for {{ customer_name }} ({{ customer_id }})
+# Generated: {{ timestamp }}
+#
+# Creates PostgreSQL database schema for console
+
+set -e
+
+echo "Initializing {{ customer_id }} console database..."
+
+# Wait for PostgreSQL to be ready
+until PGPASSWORD={{ postgres_password }} psql -h postgres -U {{ customer_id }} -d {{ customer_id }}_console -c '\q' 2>/dev/null; do
+  echo "Waiting for PostgreSQL..."
+  sleep 2
+done
+
+echo "PostgreSQL ready, creating schema..."
+
+# Run SQL initialization
+PGPASSWORD={{ postgres_password }} psql -h postgres -U {{ customer_id }} -d {{ customer_id }}_console <<EOF
+
+-- Console Users Table
+CREATE TABLE IF NOT EXISTS console_users (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    full_name VARCHAR(255),
+    role VARCHAR(50) DEFAULT 'user',
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT NOW(),
+    last_login TIMESTAMP
+);
+
+-- Console Sessions Table
+CREATE TABLE IF NOT EXISTS console_sessions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES console_users(id) ON DELETE CASCADE,
+    token VARCHAR(500) UNIQUE NOT NULL,
+    expires_at TIMESTAMP NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Console Activity Log
+CREATE TABLE IF NOT EXISTS console_activity (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES console_users(id) ON DELETE SET NULL,
+    action VARCHAR(100) NOT NULL,
+    details JSONB,
+    ip_address VARCHAR(45),
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Customer Categories (dynamic data categorization)
+CREATE TABLE IF NOT EXISTS customer_data_categories (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    customer_id VARCHAR(100) NOT NULL,
+    category_key VARCHAR(100) NOT NULL,
+    category_name VARCHAR(255) NOT NULL,
+    description TEXT,
+    query_filter JSONB,
+    icon VARCHAR(50),
+    color VARCHAR(50),
+    created_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE(customer_id, category_key)
+);
+
+-- Create indexes
+CREATE INDEX IF NOT EXISTS idx_console_sessions_token ON console_sessions(token);
+CREATE INDEX IF NOT EXISTS idx_console_sessions_user_id ON console_sessions(user_id);
+CREATE INDEX IF NOT EXISTS idx_console_activity_user_id ON console_activity(user_id);
+CREATE INDEX IF NOT EXISTS idx_console_activity_created_at ON console_activity(created_at);
+CREATE INDEX IF NOT EXISTS idx_customer_categories ON customer_data_categories(customer_id, category_key);
+
+-- Insert default admin user (password: {{ default_password }})
+INSERT INTO console_users (email, password_hash, full_name, role)
+VALUES (
+    'admin@{{ customer_id }}.de',
+    '{{ default_password_hash }}',
+    '{{ customer_name }} Admin',
+    'customer_admin'
+)
+ON CONFLICT (email) DO NOTHING;
+
+-- Insert default data categories
+INSERT INTO customer_data_categories (customer_id, category_key, category_name, description, icon, color)
+VALUES
+    ('{{ customer_id }}', 'all', 'All Documents', 'All documents in lakehouse', '📄', 'gray'),
+    ('{{ customer_id }}', 'products', 'Products', 'Product catalog and specifications', '📦', 'blue'),
+    ('{{ customer_id }}', 'contracts', 'Contracts', 'Legal contracts and agreements', '📝', 'green'),
+    ('{{ customer_id }}', 'invoices', 'Invoices', 'Financial invoices and receipts', '💰', 'yellow'),
+    ('{{ customer_id }}', 'emails', 'Emails', 'Email correspondence', '✉️', 'red'),
+    ('{{ customer_id }}', 'reports', 'Reports', 'Business reports and analytics', '📊', 'purple')
+ON CONFLICT (customer_id, category_key) DO NOTHING;
+
+EOF
+
+echo "✅ Database initialized successfully for {{ customer_id }}"

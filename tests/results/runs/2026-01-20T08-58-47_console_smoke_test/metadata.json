@@ -1,0 +1,11 @@
+{
+  "run_id": "2026-01-20T08-58-47_console_smoke_test",
+  "journey_id": "console_smoke_test",
+  "started_at": "2026-01-20T08:58:47.460Z",
+  "completed_at": "2026-01-20T08:58:47.460Z",
+  "total_steps": 1,
+  "steps_passed": 1,
+  "steps_failed": 0,
+  "steps_skipped": 0,
+  "status": "completed"
+}

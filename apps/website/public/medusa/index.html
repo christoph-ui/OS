@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>0711 Medusa — This Changes Everything</title>
+    <meta name="description" content="The missing link between Claude Desktop and Claude Code. This changes everything.">
+    <link rel="icon" type="image/svg+xml" href="icon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;600&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --black: #050505;
+            --charcoal: #0d0d0d;
+            --graphite: #1a1a1a;
+            --steel: #2a2a2a;
+            --gold: #C9A227;
+            --gold-light: #E8C547;
+            --gold-dim: #8B7355;
+            --cream: #F5F0E6;
+            --cream-dim: #A69F94;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Crimson Pro', Georgia, serif;
+            background: var(--black);
+            color: var(--cream);
+            line-height: 1.8;
+            overflow-x: hidden;
+            font-size: 18px;
+        }
+
+        ::selection { background: var(--gold); color: var(--black); }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        h1, h2, h3, h4, .display {
+            font-family: 'Bebas Neue', sans-serif;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .gold { color: var(--gold); }
+        .dim { color: var(--cream-dim); }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0; width: 100%;
+            padding: 2rem 4%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            mix-blend-mode: difference;
+        }
+
+        .logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.4rem;
+            letter-spacing: 0.2em;
+            color: var(--cream);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-mark {
+            width: 32px; height: 32px;
+            border: 2px solid currentColor;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--cream);
+            text-decoration: none;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 0; height: 1px;
+            background: var(--gold);
+            transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .nav-links a:hover::after { width: 100%; }
+
+        /* Buttons */
+        .btn-primary {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            background: var(--gold);
+            color: var(--black);
+            padding: 1.2rem 2.5rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.4s;
+        }
+
+        .btn-primary:hover {
+            background: var(--gold-light);
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(201, 162, 39, 0.25);
+        }
+
+        .btn-ghost {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--cream-dim);
+            text-decoration: none;
+            padding: 1.2rem 0;
+            transition: color 0.3s;
+        }
+
+        .btn-ghost:hover { color: var(--gold); }
+
+        .btn-large {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            background: var(--gold);
+            color: var(--black);
+            padding: 1.8rem 4rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.4s;
+        }
+
+        .btn-large:hover {
+            background: var(--gold-light);
+            transform: translateY(-3px);
+            box-shadow: 0 20px 50px rgba(201, 162, 39, 0.35);
+        }
+
+        /* Sections */
+        .section { padding: 10rem 6%; }
+        .section-dark { background: var(--graphite); }
+        .section-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--gold);
+            margin-bottom: 3rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .section-label::before {
+            content: '';
+            width: 40px; height: 1px;
+            background: var(--gold);
+        }
+
+        .container { max-width: 1000px; margin: 0 auto; }
+        .container-wide { max-width: 1400px; margin: 0 auto; }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 8rem 6%;
+            position: relative;
+        }
+
+        .hero-icon {
+            width: 180px; height: 180px;
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: revealIcon 1.5s cubic-bezier(0.22, 1, 0.36, 1) 0.3s forwards;
+        }
+
+        @keyframes revealIcon {
+            0% { opacity: 0; transform: scale(0.8) translateY(30px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .hero-title {
+            font-size: clamp(4rem, 12vw, 9rem);
+            line-height: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .hero-statement {
+            font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+            max-width: 700px;
+            margin-bottom: 0.5rem;
+            font-style: italic;
+        }
+
+        .hero-sub {
+            font-size: 1.1rem;
+            color: var(--cream-dim);
+            margin-bottom: 3rem;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .scroll-indicator span {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--cream-dim);
+        }
+
+        .scroll-line {
+            width: 1px; height: 60px;
+            background: linear-gradient(to bottom, var(--gold), transparent);
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 0.3; transform: scaleY(0.7); }
+            50% { opacity: 1; transform: scaleY(1); }
+        }
+
+        /* Text sections */
+        .text-section h2 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            line-height: 1.1;
+            margin-bottom: 3rem;
+        }
+
+        .text-section p {
+            font-size: 1.25rem;
+            color: var(--cream-dim);
+            margin-bottom: 2rem;
+            max-width: 750px;
+        }
+
+        .text-section p strong {
+            color: var(--cream);
+        }
+
+        .text-section .lead {
+            font-size: 1.5rem;
+            color: var(--cream);
+            font-style: italic;
+        }
+
+        /* Big Statement */
+        .big-statement {
+            padding: 12rem 6%;
+            text-align: center;
+        }
+
+        .big-statement h2 {
+            font-size: clamp(3rem, 8vw, 7rem);
+            line-height: 1;
+            margin-bottom: 2rem;
+        }
+
+        .big-statement p {
+            font-size: 1.4rem;
+            color: var(--cream-dim);
+            max-width: 600px;
+            margin: 0 auto;
+            font-style: italic;
+        }
+
+        /* Problem List */
+        .problem-list {
+            list-style: none;
+            margin: 3rem 0;
+        }
+
+        .problem-list li {
+            font-size: 1.2rem;
+            color: var(--cream-dim);
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--steel);
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+        }
+
+        .problem-list li::before {
+            content: '×';
+            color: #cc4444;
+            font-size: 1.5rem;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        /* Feature Cards Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2px;
+            background: var(--steel);
+            margin: 4rem 0;
+        }
+
+        .feature-card {
+            background: var(--charcoal);
+            padding: 4rem;
+            position: relative;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 0; height: 4px;
+            background: var(--gold);
+            transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .feature-card:hover::before { width: 100%; }
+        .feature-card:hover { background: var(--graphite); }
+
+        .feature-number {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 4rem;
+            color: var(--steel);
+            line-height: 1;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.1em;
+        }
+
+        .feature-card p {
+            color: var(--cream-dim);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .feature-card p strong {
+            color: var(--cream);
+        }
+
+        .feature-highlight {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--gold);
+            margin-top: 2rem;
+            letter-spacing: 0.1em;
+        }
+
+        /* Deep Dive Sections */
+        .deep-dive {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 100vh;
+            border-top: 1px solid var(--steel);
+        }
+
+        .deep-dive:nth-child(even) { direction: rtl; }
+        .deep-dive:nth-child(even) > * { direction: ltr; }
+
+        .deep-visual {
+            background: var(--graphite);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem;
+            position: relative;
+        }
+
+        .deep-visual .icon-huge {
+            font-size: 10rem;
+            margin-bottom: 2rem;
+        }
+
+        .deep-visual .number-bg {
+            position: absolute;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 25rem;
+            color: var(--steel);
+            opacity: 0.3;
+        }
+
+        .deep-content {
+            padding: 6rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .deep-content .section-label { margin-bottom: 2rem; }
+
+        .deep-content h2 {
+            font-size: clamp(2.2rem, 4vw, 3.5rem);
+            line-height: 1.1;
+            margin-bottom: 2rem;
+        }
+
+        .deep-content p {
+            font-size: 1.15rem;
+            color: var(--cream-dim);
+            margin-bottom: 1.5rem;
+            line-height: 1.9;
+        }
+
+        .deep-content p strong { color: var(--cream); }
+
+        .deep-content .quote {
+            font-size: 1.3rem;
+            font-style: italic;
+            color: var(--cream);
+            border-left: 3px solid var(--gold);
+            padding-left: 2rem;
+            margin: 2rem 0;
+        }
+
+        .benefit-list {
+            list-style: none;
+            margin-top: 2rem;
+        }
+
+        .benefit-list li {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--cream-dim);
+            padding: 0.8rem 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid var(--steel);
+        }
+
+        .benefit-list li::before {
+            content: '→';
+            color: var(--gold);
+        }
+
+        /* Comparison */
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 80px 1fr;
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 4rem auto;
+            align-items: start;
+        }
+
+        .compare-side h3 {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .compare-side.before h3 { color: var(--cream-dim); }
+        .compare-side.after h3 { color: var(--gold); }
+
+        .compare-list {
+            list-style: none;
+        }
+
+        .compare-list li {
+            font-size: 1.1rem;
+            padding: 1.2rem 0;
+            border-bottom: 1px solid var(--steel);
+        }
+
+        .before .compare-list li { color: var(--cream-dim); }
+        .after .compare-list li { color: var(--cream); }
+
+        .compare-arrow {
+            font-size: 3rem;
+            color: var(--gold);
+            padding-top: 4rem;
+            text-align: center;
+        }
+
+        /* Stats */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            border-top: 1px solid var(--steel);
+            border-bottom: 1px solid var(--steel);
+        }
+
+        .stat {
+            padding: 4rem 2rem;
+            text-align: center;
+            border-right: 1px solid var(--steel);
+        }
+
+        .stat:last-child { border-right: none; }
+
+        .stat-number {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 5rem;
+            color: var(--gold);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--cream-dim);
+            margin-top: 1rem;
+        }
+
+        .stat-detail {
+            font-size: 0.95rem;
+            color: var(--cream-dim);
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        /* Steps */
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0;
+            margin: 4rem 0;
+        }
+
+        .step {
+            padding: 3rem 2rem;
+            border: 1px solid var(--steel);
+            border-right: none;
+            position: relative;
+            transition: background 0.3s;
+        }
+
+        .step:last-child { border-right: 1px solid var(--steel); }
+        .step:hover { background: var(--graphite); }
+
+        .step::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 0; height: 4px;
+            background: var(--gold);
+            transition: width 0.6s;
+        }
+
+        .step:hover::before { width: 100%; }
+
+        .step-number {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 4rem;
+            color: var(--steel);
+            line-height: 1;
+            margin-bottom: 1.5rem;
+        }
+
+        .step-time {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--gold);
+            letter-spacing: 0.15em;
+            margin-bottom: 1rem;
+        }
+
+        .step h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            letter-spacing: 0.1em;
+        }
+
+        .step p {
+            color: var(--cream-dim);
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        /* Testimonial Quote */
+        .quote-section {
+            padding: 10rem 6%;
+            text-align: center;
+        }
+
+        .big-quote {
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            font-style: italic;
+            max-width: 900px;
+            margin: 0 auto 3rem;
+            line-height: 1.5;
+        }
+
+        .big-quote .highlight { color: var(--gold); }
+
+        .quote-attr {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--cream-dim);
+        }
+
+        /* Free section */
+        .free-section {
+            padding: 10rem 6%;
+            text-align: center;
+            background: var(--graphite);
+        }
+
+        .free-section h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            color: var(--cream-dim);
+            margin-bottom: 2rem;
+        }
+
+        .free-section h2 span { color: var(--gold); }
+
+        .free-badge {
+            display: inline-block;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(5rem, 12vw, 10rem);
+            color: var(--gold);
+            margin-bottom: 2rem;
+        }
+
+        .free-section p {
+            font-size: 1.3rem;
+            color: var(--cream-dim);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .free-section p strong { color: var(--cream); }
+
+        /* Final CTA */
+        .final-cta {
+            padding: 14rem 6%;
+            text-align: center;
+            position: relative;
+        }
+
+        .final-cta::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 1000px; height: 1000px;
+            background: radial-gradient(ellipse, var(--gold) 0%, transparent 50%);
+            opacity: 0.03;
+        }
+
+        .final-cta h2 {
+            font-size: clamp(4rem, 10vw, 8rem);
+            line-height: 1;
+            margin-bottom: 2rem;
+        }
+
+        .final-cta p {
+            font-size: 1.4rem;
+            color: var(--cream-dim);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            font-style: italic;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Footer */
+        footer {
+            padding: 4rem 6%;
+            border-top: 1px solid var(--steel);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-left {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .footer-logo { width: 50px; height: 50px; }
+
+        .footer-info {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--cream-dim);
+        }
+
+        .footer-info strong {
+            color: var(--gold);
+            font-weight: 500;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 3rem;
+        }
+
+        .footer-links a {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--cream-dim);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover { color: var(--gold); }
+
+        /* Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .deep-dive { grid-template-columns: 1fr; }
+            .deep-dive:nth-child(even) { direction: ltr; }
+            .deep-visual { min-height: 50vh; }
+            .features-grid { grid-template-columns: 1fr; }
+            .comparison { grid-template-columns: 1fr; text-align: center; }
+            .compare-arrow { transform: rotate(90deg); padding: 2rem 0; }
+            .stats-bar, .steps-grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .stats-bar, .steps-grid { grid-template-columns: 1fr; }
+            .step { border-right: 1px solid var(--steel); }
+            footer { flex-direction: column; gap: 2rem; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <a href="#" class="logo">
+            <div class="logo-mark">07</div>
+            MEDUSA
+        </a>
+        <ul class="nav-links">
+            <li><a href="#vision">Vision</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="tools.html">Tools</a></li>
+            <li><a href="#how">Setup</a></li>
+            <li><a href="#download">Download</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <img src="icon.svg" alt="0711 Medusa" class="hero-icon">
+        <h1 class="hero-title"><span class="gold">0711</span> MEDUSA</h1>
+        <p class="hero-statement">"Today, we're introducing something that changes the way you build software with AI."</p>
+        <p class="hero-sub">Claude Desktop. Claude Code. Finally, together.</p>
+        <div class="hero-cta">
+            <a href="#download" class="btn-primary">Download Free</a>
+            <a href="#vision" class="btn-ghost">The Vision →</a>
+        </div>
+        <div class="scroll-indicator">
+            <span>Scroll</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- Vision -->
+    <section class="section text-section" id="vision">
+        <div class="container">
+            <div class="section-label reveal">The Vision</div>
+            <h2 class="reveal">We Believe In<br>Something Simple.</h2>
+            <p class="lead reveal">Your AI tools should work together. Not against each other. Not separate from each other. <strong>Together.</strong></p>
+            <p class="reveal">When Anthropic released Claude Desktop, it was magical. Conversations that feel human. Reasoning that actually makes sense. A true thinking partner for complex problems.</p>
+            <p class="reveal">And when Claude Code arrived? Game-changing. An AI that lives in your terminal. Writes code. Runs tests. Deploys applications. All through natural language.</p>
+            <p class="reveal"><strong>But here's the thing nobody talks about:</strong></p>
+            <p class="reveal">They don't know about each other.</p>
+            <p class="reveal">Two of the most powerful AI development tools ever created. Sitting on your Mac. <strong>Completely isolated.</strong> Two brilliant minds that have never met.</p>
+            <p class="reveal" style="color: var(--gold); font-style: italic; font-size: 1.4rem; margin-top: 3rem;">Until now.</p>
+        </div>
+    </section>
+
+    <!-- Big Statement 1 -->
+    <section class="big-statement section-dark">
+        <h2 class="reveal">This Is<br><span class="gold">Medusa</span></h2>
+        <p class="reveal">One bridge. One interface. One unified intelligence.</p>
+    </section>
+
+    <!-- The Problem -->
+    <section class="section text-section">
+        <div class="container">
+            <div class="section-label reveal">The Problem</div>
+            <h2 class="reveal">Let's Be Honest.<br>Your Workflow Is Broken.</h2>
+            <p class="reveal">You've accepted it because you didn't have a choice. But deep down, you know something's wrong. Every day, you're doing things that shouldn't be necessary:</p>
+            <ul class="problem-list">
+                <li class="reveal"><strong>Copy. Paste. Copy. Paste.</strong> You're a human clipboard between Claude Desktop and your terminal. Copying code snippets. Pasting error messages. Copying again. It never ends.</li>
+                <li class="reveal"><strong>Context Switching Is Killing You.</strong> You're in flow state with Claude Desktop, planning the perfect implementation. Then you switch to Claude Code. Wait, what was that third requirement again?</li>
+                <li class="reveal"><strong>You Can't See What Claude Code Is Doing.</strong> It's running in a terminal somewhere. You hope it's making progress. You have no idea until you check. And by then, it might have gone completely off track.</li>
+                <li class="reveal"><strong>Dangerous Commands Run Without Permission.</strong> Claude Code is powerful. Maybe too powerful. One wrong command and your database is gone. Your git history is rewritten. Your production server is down.</li>
+                <li class="reveal"><strong>AI Takes Shortcuts You Don't Notice.</strong> "Simplified for brevity." "Placeholder for now." "TODO: implement later." You don't see these until 3am when everything breaks.</li>
+                <li class="reveal"><strong>You Lose Everything Between Sessions.</strong> Yesterday you made incredible progress. Today? Claude has no idea what you're talking about. Every session starts from zero.</li>
+            </ul>
+            <p class="reveal" style="margin-top: 3rem; font-size: 1.4rem;"><strong>This isn't a minor inconvenience. This is a fundamental problem with how AI development works today.</strong></p>
+        </div>
+    </section>
+
+    <!-- Solution Statement -->
+    <section class="big-statement">
+        <div class="section-label reveal" style="justify-content: center;">The Solution</div>
+        <h2 class="reveal">We Fixed It.</h2>
+        <p class="reveal">Every problem. Every frustration. Every broken workflow. Gone.</p>
+    </section>
+
+    <!-- Feature Overview Grid -->
+    <section class="section section-dark" id="features">
+        <div class="container-wide">
+            <div class="section-label reveal">The Features</div>
+            <h2 style="font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 4rem;" class="reveal">Six Breakthroughs.<br>One Application.</h2>
+            <div class="features-grid">
+                <div class="feature-card reveal">
+                    <div class="feature-number">01</div>
+                    <h3>Bidirectional Bridge</h3>
+                    <p>For the first time in history, <strong>Claude Desktop can see and control Claude Code</strong>. Read terminal output. Send commands. Monitor progress. In real-time.</p>
+                    <p>39 MCP tools give you complete control. It's not a hack. It's native integration at the protocol level.</p>
+                    <div class="feature-highlight">→ Complete terminal visibility</div>
+                </div>
+                <div class="feature-card reveal">
+                    <div class="feature-number">02</div>
+                    <h3>Behavior Watchdog</h3>
+                    <p>AI cuts corners. That's the dirty secret nobody wants to admit. <strong>Medusa catches it in the act.</strong></p>
+                    <p>20+ behavior patterns detect laziness, placeholders, and shortcuts. Automatic intervention stops bad code before it's written.</p>
+                    <div class="feature-highlight">→ Never accept TODO again</div>
+                </div>
+                <div class="feature-card reveal">
+                    <div class="feature-number">03</div>
+                    <h3>Approval Gates</h3>
+                    <p><strong>Not all commands are created equal.</strong> Some are safe. Some could destroy everything. Medusa knows the difference.</p>
+                    <p>Risky operations queue for your approval. Auto-approve rules for trusted patterns. Total control without constant interruption.</p>
+                    <div class="feature-highlight">→ Zero anxiety deployment</div>
+                </div>
+                <div class="feature-card reveal">
+                    <div class="feature-number">04</div>
+                    <h3>Task Bible</h3>
+                    <p>Complex projects. Dozens of tasks. Dependencies. Priorities. Blockers. <strong>Medusa remembers everything.</strong></p>
+                    <p>The Task Bible persists across sessions. Claude knows what's done, what's next, what's blocked. No more "where were we?"</p>
+                    <div class="feature-highlight">→ Perfect memory forever</div>
+                </div>
+                <div class="feature-card reveal">
+                    <div class="feature-number">05</div>
+                    <h3>Smart Alerts</h3>
+                    <p>Your terminal outputs thousands of lines. <strong>Errors hide in the noise.</strong> Warnings vanish. Critical failures go unnoticed.</p>
+                    <p>Regex-based pattern matching catches what matters. Get alerted the instant something goes wrong. Never miss another failure.</p>
+                    <div class="feature-highlight">→ Instant error detection</div>
+                </div>
+                <div class="feature-card reveal">
+                    <div class="feature-number">06</div>
+                    <h3>Native macOS</h3>
+                    <p>This isn't a browser tab. This isn't a CLI tool you forget about. <strong>This is a real macOS application.</strong></p>
+                    <p>Built with Electron. Professional DMG installer. Lives in your dock. Spotlight searchable. First-class citizen on your Mac.</p>
+                    <div class="feature-highlight">→ Feels like it belongs</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Deep Dive: Bridge -->
+    <div class="deep-dive">
+        <div class="deep-visual">
+            <span class="number-bg">01</span>
+            <span class="icon-huge">⟷</span>
+        </div>
+        <div class="deep-content">
+            <div class="section-label">Deep Dive</div>
+            <h2>The Bidirectional<br>Bridge</h2>
+            <p>Let's talk about what this actually means. Because this isn't marketing speak. This is engineering.</p>
+            <p><strong>Claude Desktop and Claude Code now share a connection.</strong> A real-time, bidirectional communication channel built on the Model Context Protocol.</p>
+            <p>From Claude Desktop, you can now:</p>
+            <ul class="benefit-list">
+                <li>Read the last 500 lines of terminal output instantly</li>
+                <li>Send any command to Claude Code's terminal</li>
+                <li>Search through output with regex patterns</li>
+                <li>Monitor multiple projects simultaneously</li>
+                <li>Connect to remote servers via SSH</li>
+                <li>Switch between projects without losing context</li>
+            </ul>
+            <p class="quote">"It's like having X-ray vision into your terminal. You see everything Claude Code sees. In real-time. From anywhere in Claude Desktop."</p>
+            <p>This alone would justify the entire project. But we didn't stop here.</p>
+        </div>
+    </div>
+
+    <!-- Deep Dive: Watchdog -->
+    <div class="deep-dive">
+        <div class="deep-visual">
+            <span class="number-bg">02</span>
+            <span class="icon-huge">◎</span>
+        </div>
+        <div class="deep-content">
+            <div class="section-label">Deep Dive</div>
+            <h2>The Behavior<br>Watchdog</h2>
+            <p>Here's something most developers don't realize: <strong>AI language models have a tendency to cut corners.</strong></p>
+            <p>Not out of malice. Not out of laziness. It's how they're trained. They optimize for completion, not perfection. And when context gets long or tasks get complex, they start taking shortcuts.</p>
+            <p>You've seen it. "I'll simplify this for clarity." "Due to token constraints." "Here's a basic implementation." "Placeholder for now."</p>
+            <p><strong>Medusa catches all of this.</strong></p>
+            <ul class="benefit-list">
+                <li>"Token budget" excuses detected instantly</li>
+                <li>"Simplified for brevity" triggers intervention</li>
+                <li>Placeholder code gets flagged immediately</li>
+                <li>"Out of scope" limitations get challenged</li>
+                <li>Incomplete implementations don't get committed</li>
+            </ul>
+            <p class="quote">"The Watchdog has saved me dozens of hours. Code that would have broken in production? Caught before it ever gets written."</p>
+            <p>When Medusa detects a violation, it automatically sends ESC to stop Claude. No more discovering at 2am that your "complete implementation" is full of TODOs.</p>
+        </div>
+    </div>
+
+    <!-- Deep Dive: Approval -->
+    <div class="deep-dive">
+        <div class="deep-visual">
+            <span class="number-bg">03</span>
+            <span class="icon-huge">✓</span>
+        </div>
+        <div class="deep-content">
+            <div class="section-label">Deep Dive</div>
+            <h2>The Approval<br>System</h2>
+            <p>Claude Code is incredibly powerful. <strong>Maybe too powerful.</strong></p>
+            <p>One command can delete your entire database. Another can force-push to main. A third can spin up expensive cloud resources. A fourth can expose secrets to the internet.</p>
+            <p>Most developers live with this anxiety. They hover over Ctrl+C. They double-check every command. They lose sleep.</p>
+            <p><strong>Medusa eliminates this completely.</strong></p>
+            <ul class="benefit-list">
+                <li>Risky commands queue for your review</li>
+                <li>You see exactly what will run before it runs</li>
+                <li>One click to approve, one click to deny</li>
+                <li>Custom rules for trusted command patterns</li>
+                <li>Complete audit trail of every decision</li>
+            </ul>
+            <p class="quote">"I used to be terrified of giving Claude Code access to production. Now I don't even think about it. Medusa has my back."</p>
+            <p>Create rules like "auto-approve all npm commands" or "always review anything touching the database." Medusa learns your preferences and adapts.</p>
+        </div>
+    </div>
+
+    <!-- Deep Dive: Task Bible -->
+    <div class="deep-dive">
+        <div class="deep-visual">
+            <span class="number-bg">04</span>
+            <span class="icon-huge">≡</span>
+        </div>
+        <div class="deep-content">
+            <div class="section-label">Deep Dive</div>
+            <h2>The Task<br>Bible</h2>
+            <p>The biggest frustration in AI development isn't the AI. <strong>It's the context window.</strong></p>
+            <p>Yesterday, you made incredible progress. You planned the architecture. You broke down the tasks. You established priorities. You were in perfect sync with Claude.</p>
+            <p>Today? Claude has no memory of any of it. Every session starts from zero. Every day, you re-explain the same things.</p>
+            <p><strong>The Task Bible changes everything.</strong></p>
+            <ul class="benefit-list">
+                <li>Structured task management that persists forever</li>
+                <li>Dependencies tracked automatically</li>
+                <li>Priority levels enforced across sessions</li>
+                <li>Progress notes attached to each task</li>
+                <li>Claude always knows what's next</li>
+            </ul>
+            <p class="quote">"I have a complex project with 87 tasks and 140 dependencies. Claude knows exactly where we are, every single time I open a conversation."</p>
+            <p>No more "let me catch you up." No more "as we discussed yesterday." Claude just knows.</p>
+        </div>
+    </div>
+
+    <!-- Before/After -->
+    <section class="section section-dark">
+        <div class="container-wide">
+            <div class="section-label reveal" style="justify-content: center;">The Transformation</div>
+            <h2 style="text-align: center; font-size: clamp(2rem, 4vw, 3rem); margin-bottom: 2rem;" class="reveal">Before & After</h2>
+            <p style="text-align: center; color: var(--cream-dim); margin-bottom: 4rem; font-style: italic;" class="reveal">This is what your workflow looks like. Before and after Medusa.</p>
+            <div class="comparison">
+                <div class="compare-side before reveal">
+                    <h3>Without Medusa</h3>
+                    <ul class="compare-list">
+                        <li>Copy-paste between apps constantly</li>
+                        <li>Can't see Claude Code's progress</li>
+                        <li>Dangerous commands run unchecked</li>
+                        <li>AI shortcuts go unnoticed until production</li>
+                        <li>Context lost every single session</li>
+                        <li>Errors discovered hours too late</li>
+                        <li>Two isolated, disconnected tools</li>
+                        <li>Constant context switching</li>
+                        <li>Manual task tracking everywhere</li>
+                        <li>Living with anxiety about what AI might do</li>
+                    </ul>
+                </div>
+                <div class="compare-arrow reveal">→</div>
+                <div class="compare-side after reveal">
+                    <h3>With Medusa</h3>
+                    <ul class="compare-list">
+                        <li>One unified interface for everything</li>
+                        <li>Real-time terminal visibility</li>
+                        <li>Approval gates for risky operations</li>
+                        <li>Watchdog catches lazy AI instantly</li>
+                        <li>Task Bible persists context forever</li>
+                        <li>Instant error alerts when they happen</li>
+                        <li>One integrated intelligence</li>
+                        <li>Flow state preserved</li>
+                        <li>Automatic task management</li>
+                        <li>Total confidence in your AI tools</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quote -->
+    <section class="quote-section">
+        <p class="big-quote reveal">"The best tool is the one that <span class="highlight">disappears</span>. That gets out of your way. That lets you focus on <span class="highlight">creating</span> instead of managing."</p>
+        <p class="quote-attr reveal">The Philosophy Behind Medusa</p>
+    </section>
+
+    <!-- Stats -->
+    <section class="stats-bar">
+        <div class="stat reveal">
+            <div class="stat-number">39</div>
+            <div class="stat-label">MCP Tools</div>
+            <div class="stat-detail">Complete terminal control</div>
+        </div>
+        <div class="stat reveal">
+            <div class="stat-number">20+</div>
+            <div class="stat-label">Watchdog Patterns</div>
+            <div class="stat-detail">AI behavior monitoring</div>
+        </div>
+        <div class="stat reveal">
+            <div class="stat-number">&lt;5</div>
+            <div class="stat-label">Minutes Setup</div>
+            <div class="stat-detail">Download to working</div>
+        </div>
+        <div class="stat reveal">
+            <div class="stat-number">∞</div>
+            <div class="stat-label">Projects</div>
+            <div class="stat-detail">No artificial limits</div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="section" id="how">
+        <div class="container-wide">
+            <div class="section-label reveal" style="justify-content: center;">Getting Started</div>
+            <h2 style="text-align: center; font-size: clamp(2.5rem, 5vw, 4rem); margin-bottom: 1rem;" class="reveal">Four Steps.<br>Five Minutes.<br>Done.</h2>
+            <p style="text-align: center; color: var(--cream-dim); font-size: 1.2rem; margin-bottom: 4rem; font-style: italic;" class="reveal">No configuration hell. No dependency nightmares. No PhD required.</p>
+            <div class="steps-grid">
+                <div class="step reveal">
+                    <div class="step-number">01</div>
+                    <div class="step-time">30 SECONDS</div>
+                    <h3>Download</h3>
+                    <p>Grab the DMG from GitHub. One file. 50MB. That's it. No npm install. No brew. No cargo. No pip. Just a file that contains everything.</p>
+                </div>
+                <div class="step reveal">
+                    <div class="step-number">02</div>
+                    <div class="step-time">10 SECONDS</div>
+                    <h3>Install</h3>
+                    <p>Drag to Applications folder. Double-click to launch. macOS does the rest. If you've ever installed an app on a Mac, you know how to do this.</p>
+                </div>
+                <div class="step reveal">
+                    <div class="step-number">03</div>
+                    <div class="step-time">2 MINUTES</div>
+                    <h3>Connect</h3>
+                    <p>Add your Claude Code projects in Medusa. Point to the terminal window. That's the entire configuration. Local projects or SSH remotes—both work.</p>
+                </div>
+                <div class="step reveal">
+                    <div class="step-number">04</div>
+                    <div class="step-time">1 MINUTE</div>
+                    <h3>Activate</h3>
+                    <p>Add Medusa as an MCP server in Claude Desktop's settings. Restart Claude Desktop. The bridge is live. You're done. Start building.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Free -->
+    <section class="free-section">
+        <h2 class="reveal">Oh, and <span>one more thing</span>...</h2>
+        <div class="free-badge reveal">Completely Free.</div>
+        <p class="reveal"><strong>Open source.</strong> MIT licensed. No subscriptions. No premium tiers. No "enterprise features." No "contact sales for pricing." No tricks. No catches.</p>
+        <p class="reveal" style="margin-top: 2rem;">Just powerful tools for developers who want to build faster. Forever free. Because that's how software should be.</p>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="final-cta" id="download">
+        <h2 class="reveal">Ready To<br><span class="gold">Transform</span><br>Your Workflow?</h2>
+        <p class="reveal">Join developers who've already discovered what's possible when Claude Desktop and Claude Code work together.</p>
+        <p class="reveal" style="margin-bottom: 3rem; color: var(--cream);">Built in Stuttgart, Germany. Engineered for excellence.</p>
+        <div class="cta-buttons">
+            <a href="https://github.com/0711-medusa/releases/latest" class="btn-large reveal">Download for macOS</a>
+            <a href="https://github.com/0711-medusa" class="btn-ghost reveal">View Source on GitHub →</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-left">
+            <img src="icon.svg" alt="0711 Medusa" class="footer-logo">
+            <div class="footer-info">
+                <strong>0711 Medusa</strong><br>
+                Made in Stuttgart, Germany
+            </div>
+        </div>
+        <div class="footer-links">
+            <a href="https://github.com/0711-medusa">GitHub</a>
+            <a href="https://github.com/0711-medusa/issues">Issues</a>
+            <a href="mailto:hello@0711medusa.dev">Contact</a>
+        </div>
+    </footer>
+
+    <script>
+        const reveals = document.querySelectorAll('.reveal');
+        const revealOnScroll = () => {
+            reveals.forEach(el => {
+                const top = el.getBoundingClientRect().top;
+                if (top < window.innerHeight * 0.88) el.classList.add('visible');
+            });
+        };
+        window.addEventListener('scroll', revealOnScroll);
+        window.addEventListener('load', revealOnScroll);
+
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                e.preventDefault();
+                const t = document.querySelector(a.getAttribute('href'));
+                if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
+</body>
+</html>

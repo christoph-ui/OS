@@ -1,0 +1,57 @@
+# =============================================================================
+# 0711 Embedding Server - multilingual-e5-large
+# =============================================================================
+#
+# Lightweight embedding server for semantic search.
+# Runs alongside vLLM on CPU or secondary GPU.
+#
+# Model: intfloat/multilingual-e5-large
+# Dimension: 1024
+# Languages: German, English, 100+ others
+#
+# =============================================================================
+
+FROM python:3.11-slim
+
+# Environment
+ENV PYTHONUNBUFFERED=1
+ENV EMBEDDING_MODEL=intfloat/multilingual-e5-large
+ENV EMBEDDING_DEVICE=cpu
+ENV EMBEDDING_PORT=8001
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+COPY requirements-embeddings.txt /app/
+RUN pip install --no-cache-dir -r requirements-embeddings.txt
+
+# Copy application code (minimal, no lora_manager)
+COPY inference/config.py /app/inference/config.py
+COPY inference/embedding_server.py /app/inference/embedding_server.py
+
+# Create minimal __init__.py without lora_manager imports
+RUN echo '"""Embedding service - minimal imports"""\nfrom .embedding_server import EmbeddingService\n__all__ = ["EmbeddingService"]' > /app/inference/__init__.py
+
+# Create cache directory
+RUN mkdir -p /root/.cache/huggingface
+
+# Pre-download embedding model (1.2GB) so it's ready instantly
+RUN python -c "from sentence_transformers import SentenceTransformer; \
+    print('Downloading multilingual-e5-large...'); \
+    model = SentenceTransformer('intfloat/multilingual-e5-large'); \
+    print('Model downloaded and cached')"
+
+# Expose port
+EXPOSE 8002
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD curl -f http://localhost:8002/health || exit 1
+
+# Run embedding server
+CMD ["python", "-m", "inference.embedding_server"]

@@ -1,0 +1,11 @@
+{
+  "run_id": "2026-01-20T10-42-22_new_customer_with_team",
+  "journey_id": "new_customer_with_team",
+  "started_at": "2026-01-20T10:42:22.280Z",
+  "completed_at": "2026-01-20T10:42:22.280Z",
+  "total_steps": 1,
+  "steps_passed": 1,
+  "steps_failed": 0,
+  "steps_skipped": 0,
+  "status": "completed"
+}

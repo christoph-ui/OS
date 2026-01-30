@@ -1,0 +1,236 @@
+.planContainer {
+  min-height: 100vh;
+  background: var(--dark);
+  padding: 3rem 2rem;
+}
+
+.planContainer h1 {
+  font-family: var(--font-poppins);
+  color: var(--light);
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  font-family: var(--font-lora);
+  color: #888;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.billingToggle {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.billingToggle button {
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  border: 1px solid var(--orange);
+  border-radius: 8px;
+  color: var(--orange);
+  cursor: pointer;
+  font-family: var(--font-poppins);
+  transition: all 0.3s ease;
+}
+
+.billingToggle button.active {
+  background: var(--orange);
+  color: #fff;
+}
+
+.plansGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto 3rem;
+}
+
+.planCard {
+  background: #1a1a19;
+  border-radius: 16px;
+  padding: 2rem;
+  border: 1px solid #333;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.planCard:hover {
+  border-color: var(--orange);
+  transform: translateY(-4px);
+}
+
+.planCard.selected {
+  border: 2px solid var(--orange);
+}
+
+.planCard.popular {
+  border: 2px solid #333;
+}
+
+.popularBadge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--orange);
+  color: #fff;
+  padding: 0.25rem 1rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: var(--font-poppins);
+}
+
+.planCard h3 {
+  font-family: var(--font-poppins);
+  color: var(--light);
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.price {
+  margin-bottom: 1.5rem;
+}
+
+.amount {
+  font-family: var(--font-poppins);
+  color: var(--light);
+  font-size: 3rem;
+  font-weight: 700;
+}
+
+.period {
+  color: #888;
+}
+
+.features {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 2rem;
+}
+
+.features li {
+  color: #ccc;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #2a2a29;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.checkmark {
+  color: var(--green);
+}
+
+.selectButton {
+  width: 100%;
+  padding: 1rem;
+  background: #2a2a29;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-poppins);
+  transition: all 0.3s ease;
+}
+
+.planCard.selected .selectButton {
+  background: var(--orange);
+}
+
+.enterpriseBox {
+  text-align: center;
+  margin: 3rem auto;
+  padding: 2rem;
+  background: #1a1a19;
+  border-radius: 16px;
+  max-width: 600px;
+}
+
+.enterpriseBox h3 {
+  font-family: var(--font-poppins);
+  color: var(--light);
+  margin-bottom: 0.5rem;
+}
+
+.enterpriseBox p {
+  color: #888;
+  margin-bottom: 1rem;
+}
+
+.enterpriseBox a {
+  display: inline-block;
+  padding: 0.75rem 2rem;
+  border: 1px solid var(--orange);
+  border-radius: 8px;
+  color: var(--orange);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.enterpriseBox a:hover {
+  background: var(--orange);
+  color: var(--light);
+}
+
+.continueBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #1a1a19;
+  padding: 1.5rem;
+  border-top: 1px solid #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.selectedLabel {
+  color: #888;
+  font-family: var(--font-poppins);
+}
+
+.selectedPlan {
+  color: var(--light);
+  font-weight: 600;
+  font-family: var(--font-poppins);
+}
+
+.continueButton {
+  padding: 1rem 3rem;
+  background: var(--orange);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-poppins);
+  transition: all 0.3s ease;
+}
+
+.continueButton:hover {
+  background: #c86647;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .plansGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .continueBar {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+}

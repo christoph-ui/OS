@@ -1,0 +1,11 @@
+{
+  "run_id": "2026-01-20T17-40-56_new_customer_signup",
+  "journey_id": "new_customer_signup",
+  "started_at": "2026-01-20T17:40:56.806Z",
+  "completed_at": "2026-01-20T17:40:56.806Z",
+  "total_steps": 3,
+  "steps_passed": 1,
+  "steps_failed": 0,
+  "steps_skipped": 0,
+  "status": "in_progress"
+}

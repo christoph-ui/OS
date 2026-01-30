@@ -1,0 +1,101 @@
+# Docker Compose for {{ customer_name }} ({{ customer_id }})
+# Generated: {{ timestamp }}
+#
+# Services:
+#   - {{ customer_id }}-console: All-in-one console (lakehouse + backend + frontend)
+#   - {{ customer_id }}-postgres: Customer database (optional, can use shared DB)
+#
+# Access:
+#   - Console UI: http://localhost:{{ port_frontend }}
+#   - Backend API: http://localhost:{{ port_backend }}
+#   - Lakehouse API: http://localhost:{{ port_lakehouse }}
+
+version: '3.8'
+
+services:
+  # =============================================================================
+  # PostgreSQL Database (Optional - for standalone deployments)
+  # =============================================================================
+
+  postgres:
+    image: postgres:16
+    container_name: {{ customer_id }}-postgres
+    restart: unless-stopped
+    ports:
+      - "{{ port_postgres }}:5432"
+    environment:
+      POSTGRES_DB: {{ customer_id }}_console
+      POSTGRES_USER: {{ customer_id }}
+      POSTGRES_PASSWORD: {{ postgres_password }}
+    volumes:
+      - {{ customer_id }}-postgres-data:/var/lib/postgresql/data
+    networks:
+      - {{ customer_id }}-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U {{ customer_id }}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # =============================================================================
+  # All-in-One Console (Lakehouse + Backend + Frontend)
+  # =============================================================================
+
+  console:
+    image: {{ customer_id }}-intelligence:{{ version }}
+    container_name: {{ customer_id }}-console
+    restart: unless-stopped
+    ports:
+      - "{{ port_lakehouse }}:{{ port_lakehouse }}"
+      - "{{ port_backend }}:{{ port_backend }}"
+      - "{{ port_frontend }}:{{ port_frontend }}"
+    environment:
+      # Customer identification
+      CUSTOMER_ID: {{ customer_id }}
+      DEPLOYMENT_TYPE: {{ deployment_type }}
+
+      # Database connection
+      DATABASE_URL: postgresql://{{ customer_id }}:{{ postgres_password }}@postgres:5432/{{ customer_id }}_console
+
+      # Service URLs
+      LAKEHOUSE_URL: http://localhost:{{ port_lakehouse }}
+
+      # Data paths (baked into image)
+      LAKEHOUSE_PATH: /data/lakehouse
+      MINIO_DATA_PATH: /data/minio
+
+      # Python module path
+      PYTHONPATH: /app
+    volumes:
+      # Optional: Mount for persistent logs
+      - {{ customer_id }}-logs:/var/log/supervisor
+    networks:
+      - {{ customer_id }}-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:{{ port_lakehouse }}/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 120s
+
+# =============================================================================
+# Networks
+# =============================================================================
+
+networks:
+  {{ customer_id }}-network:
+    name: {{ customer_id }}-network
+    driver: bridge
+
+# =============================================================================
+# Volumes
+# =============================================================================
+
+volumes:
+  {{ customer_id }}-postgres-data:
+    name: {{ customer_id }}-postgres-data
+  {{ customer_id }}-logs:
+    name: {{ customer_id }}-logs

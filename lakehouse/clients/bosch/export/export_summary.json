@@ -1,0 +1,15 @@
+{
+  "export_completed_at": "2025-12-06T07:56:32.541678",
+  "duration_seconds": 3.817127,
+  "source_database": "bosch_products",
+  "export_directory": "/home/christoph.bertsch/0711/0711-OS/lakehouse/clients/bosch/export",
+  "data_exported": {
+    "products": 23141,
+    "features": 43956,
+    "embeddings": 23138,
+    "relationships": 353407,
+    "etim_classifications": 1218,
+    "eclass_classifications": 3,
+    "eclass_attributes": 147
+  }
+}

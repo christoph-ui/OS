@@ -1,0 +1,12 @@
+{
+  "journey_id": "new_customer_signup",
+  "step_number": 1,
+  "step_name": "Complete Signup Flow",
+  "status": "pass",
+  "console_errors": [],
+  "network_failures": [],
+  "suggestions": [],
+  "timestamp": "2026-01-20T17:22:59.876Z",
+  "duration_ms": null,
+  "screenshot_filename": null
+}

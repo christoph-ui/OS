@@ -1,0 +1,8 @@
+{
+  "count": 23138,
+  "dimension": 384,
+  "model": "sentence-transformers/all-MiniLM-L6-v2",
+  "dtype": "float32",
+  "format": "numpy_compressed",
+  "exported_at": "2025-12-06T07:56:30.974554"
+}

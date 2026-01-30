@@ -1,0 +1,60 @@
+# Docker Compose for E2E Testing
+# Isolated test environment on ports 50XX
+
+version: '3.8'
+
+services:
+  # Test PostgreSQL
+  postgres-test:
+    image: postgres:16-alpine
+    container_name: 0711-postgres-test
+    environment:
+      POSTGRES_DB: 0711_test
+      POSTGRES_USER: 0711
+      POSTGRES_PASSWORD: test_password
+    ports:
+      - "5050:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U 0711"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - test-network
+
+  # Test Redis
+  redis-test:
+    image: redis:7-alpine
+    container_name: 0711-redis-test
+    ports:
+      - "6060:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - test-network
+
+  # Test MinIO
+  minio-test:
+    image: minio/minio:latest
+    container_name: 0711-minio-test
+    environment:
+      MINIO_ROOT_USER: test_access
+      MINIO_ROOT_PASSWORD: test_secret
+    ports:
+      - "5060:9000"
+      - "5061:9001"
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - test-network
+
+networks:
+  test-network:
+    driver: bridge

@@ -1,0 +1,150 @@
+# {{ customer_name }} Standalone Console - Complete 3-Service Bundle
+# Generated: {{ timestamp }}
+# Customer ID: {{ customer_id }}
+# Ports: {{ port_lakehouse }}, {{ port_backend }}, {{ port_frontend }}
+#
+# Services:
+#   - Lakehouse API (port {{ port_lakehouse }})
+#   - Console Backend (port {{ port_backend }})
+#   - Console Frontend (port {{ port_frontend }})
+#
+# Data: {{ data_size_gb }}GB baked into image
+
+FROM 0711/lakehouse:latest
+
+LABEL customer.id="{{ customer_id }}"
+LABEL customer.name="{{ customer_name }}"
+LABEL deployment.type="{{ deployment_type }}"
+LABEL generated.date="{{ timestamp }}"
+
+# =============================================================================
+# System Dependencies
+# =============================================================================
+
+RUN apt-get update && apt-get install -y \
+    nodejs \
+    npm \
+    supervisor \
+    postgresql-client \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# =============================================================================
+# Console Backend Dependencies
+# =============================================================================
+
+# Install minimal console dependencies (heavy libs from base image!)
+COPY console/backend/requirements.txt /tmp/console-requirements.txt
+RUN pip3 install --no-cache-dir -r /tmp/console-requirements.txt
+
+# =============================================================================
+# Python Package Structure (CRITICAL!)
+# =============================================================================
+
+# Create __init__.py files for proper Python package imports
+RUN mkdir -p /app/console/backend/routes /app/console/backend/auth /app/console/backend/websocket && \
+    touch /app/console/__init__.py && \
+    touch /app/console/backend/__init__.py && \
+    touch /app/console/backend/routes/__init__.py && \
+    touch /app/console/backend/auth/__init__.py && \
+    touch /app/console/backend/websocket/__init__.py
+
+# =============================================================================
+# Copy Console Backend
+# =============================================================================
+
+# Copy console backend code (must use absolute imports!)
+COPY console/ /app/console/
+
+# Validate imports BEFORE proceeding (fail fast!)
+RUN python3 -c "from console.backend.main import app; print('✅ Backend imports validated')" || \
+    (echo "❌ Backend import validation failed!" && exit 1)
+
+# =============================================================================
+# Copy Console Frontend (Production Build)
+# =============================================================================
+
+COPY console-frontend/.next/ /app/console-frontend/.next/
+COPY console-frontend/public/ /app/console-frontend/public/
+COPY console-frontend/package.json /app/console-frontend/package.json
+COPY console-frontend/node_modules/ /app/console-frontend/node_modules/
+
+# =============================================================================
+# Bake Customer Data (LARGEST LAYERS FIRST!)
+# =============================================================================
+
+# Layer 1: Lakehouse data (largest, changes least frequently)
+COPY lakehouse/ /data/lakehouse/
+RUN echo "Lakehouse data: $(du -sh /data/lakehouse 2>/dev/null | cut -f1)" && \
+    test -d /data/lakehouse || (echo "❌ Lakehouse data missing!" && exit 1)
+
+# Layer 2: MinIO files (medium size, changes moderately)
+COPY minio/ /data/minio/
+RUN echo "MinIO data: $(du -sh /data/minio 2>/dev/null | cut -f1)"
+
+# Layer 3: Configuration (tiny, changes frequently)
+COPY config.json /data/config.json
+
+# =============================================================================
+# Database Initialization Scripts
+# =============================================================================
+
+COPY init_db.sql /app/init_db.sql
+COPY init_console_db.sh /app/init_console_db.sh
+RUN chmod +x /app/init_console_db.sh
+
+# =============================================================================
+# Supervisord Configuration
+# =============================================================================
+
+COPY supervisord.conf /etc/supervisor/conf.d/{{ customer_id }}.conf
+
+# Create log directory
+RUN mkdir -p /var/log/supervisor
+
+# =============================================================================
+# Environment Variables
+# =============================================================================
+
+ENV CUSTOMER_ID={{ customer_id }}
+ENV LAKEHOUSE_PATH=/data/lakehouse
+ENV MINIO_BUCKET=customer-{{ customer_id }}
+ENV PYTHONPATH=/app
+ENV DEPLOYMENT_TYPE={{ deployment_type }}
+
+# =============================================================================
+# Expose Ports
+# =============================================================================
+
+# Lakehouse API, Console Backend, Console Frontend
+EXPOSE {{ port_lakehouse }} {{ port_backend }} {{ port_frontend }}
+
+# =============================================================================
+# Health Check
+# =============================================================================
+
+# All services must respond (lakehouse + backend)
+HEALTHCHECK --interval=30s --timeout=10s --start-period=120s \
+  CMD curl -f http://localhost:{{ port_lakehouse }}/health && \
+      curl -f http://localhost:{{ port_backend }}/health || exit 1
+
+# =============================================================================
+# Startup
+# =============================================================================
+
+# Start all services via supervisord
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/{{ customer_id }}.conf"]
+
+# =============================================================================
+# Image Metadata
+# =============================================================================
+
+LABEL org.opencontainers.image.title="{{ customer_name }} Console"
+LABEL org.opencontainers.image.description="0711 Platform deployment for {{ customer_name }}"
+LABEL org.opencontainers.image.created="{{ timestamp }}"
+LABEL 0711.customer.id="{{ customer_id }}"
+LABEL 0711.customer.name="{{ customer_name }}"
+LABEL 0711.deployment.type="{{ deployment_type }}"
+LABEL 0711.ports.lakehouse="{{ port_lakehouse }}"
+LABEL 0711.ports.backend="{{ port_backend }}"
+LABEL 0711.ports.frontend="{{ port_frontend }}"

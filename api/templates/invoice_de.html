@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rechnung {{ invoice.invoice_number }}</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2cm;
+        }
+
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            font-size: 10pt;
+            line-height: 1.4;
+            color: #000;
+        }
+
+        .header {
+            margin-bottom: 2cm;
+        }
+
+        .company-info {
+            font-size: 8pt;
+            color: #666;
+            margin-bottom: 1cm;
+        }
+
+        .customer-address {
+            margin-bottom: 1.5cm;
+        }
+
+        .invoice-title {
+            font-size: 18pt;
+            font-weight: bold;
+            margin-bottom: 0.5cm;
+        }
+
+        .invoice-meta {
+            margin-bottom: 1.5cm;
+        }
+
+        .invoice-meta table {
+            width: 100%;
+        }
+
+        .invoice-meta td {
+            padding: 0.2cm 0;
+        }
+
+        .invoice-meta td:first-child {
+            width: 40%;
+            font-weight: bold;
+        }
+
+        table.line-items {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1cm 0;
+        }
+
+        table.line-items th {
+            background: #f5f5f5;
+            padding: 0.3cm;
+            text-align: left;
+            font-weight: bold;
+            border-bottom: 2px solid #000;
+        }
+
+        table.line-items td {
+            padding: 0.3cm;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table.line-items .number {
+            text-align: right;
+        }
+
+        .totals {
+            float: right;
+            width: 50%;
+            margin-top: 0.5cm;
+        }
+
+        .totals table {
+            width: 100%;
+        }
+
+        .totals td {
+            padding: 0.2cm 0;
+        }
+
+        .totals td:first-child {
+            text-align: left;
+        }
+
+        .totals td:last-child {
+            text-align: right;
+        }
+
+        .totals .total-row {
+            font-weight: bold;
+            font-size: 12pt;
+            border-top: 2px solid #000;
+            padding-top: 0.3cm;
+        }
+
+        .payment-info {
+            clear: both;
+            margin-top: 2cm;
+            padding-top: 1cm;
+            border-top: 1px solid #ddd;
+        }
+
+        .payment-info h3 {
+            margin-bottom: 0.5cm;
+        }
+
+        .footer {
+            margin-top: 2cm;
+            padding-top: 0.5cm;
+            border-top: 1px solid #ddd;
+            font-size: 8pt;
+            color: #666;
+            text-align: center;
+        }
+
+        .reverse-charge-notice {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 0.5cm;
+            margin: 1cm 0;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div style="text-align: right;">
+            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjQwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjx0ZXh0IHg9IjEwIiB5PSIzMCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjI0IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iI2Q5Nzc1NyI+MDcxMTwvdGV4dD48L3N2Zz4=" alt="0711" style="height: 40px;">
+        </div>
+        <div class="company-info">
+            {{ company.name }} • {{ company.street }} • {{ company.postal_code }} {{ company.city }}
+        </div>
+    </div>
+
+    <!-- Customer Address -->
+    <div class="customer-address">
+        <strong>{{ customer.company_name }}</strong><br>
+        {% if customer.company_type %}{{ customer.company_type }}<br>{% endif %}
+        {% if customer.street %}{{ customer.street }}<br>{% endif %}
+        {% if customer.postal_code and customer.city %}
+            {{ customer.postal_code }} {{ customer.city }}<br>
+        {% endif %}
+        {% if customer.country and customer.country != 'DE' %}{{ customer.country }}<br>{% endif %}
+        {% if customer.vat_id %}<br>USt-IdNr.: {{ customer.vat_id }}{% endif %}
+    </div>
+
+    <!-- Invoice Title -->
+    <div class="invoice-title">
+        Rechnung {{ invoice.invoice_number }}
+    </div>
+
+    <!-- Invoice Metadata -->
+    <div class="invoice-meta">
+        <table>
+            <tr>
+                <td>Rechnungsdatum:</td>
+                <td>{{ invoice.invoice_date }}</td>
+            </tr>
+            <tr>
+                <td>Leistungszeitraum:</td>
+                <td>{{ line_items[0].period }}</td>
+            </tr>
+            {% if po_number %}
+            <tr>
+                <td>Ihre Bestellnummer:</td>
+                <td>{{ po_number }}</td>
+            </tr>
+            {% endif %}
+            <tr>
+                <td>Fälligkeitsdatum:</td>
+                <td><strong>{{ invoice.due_date }}</strong></td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Greeting -->
+    <p>Sehr geehrte Damen und Herren,</p>
+    <p>vielen Dank für Ihr Vertrauen. Wir stellen Ihnen hiermit folgende Leistungen in Rechnung:</p>
+
+    <!-- Line Items -->
+    <table class="line-items">
+        <thead>
+            <tr>
+                <th>Beschreibung</th>
+                <th class="number">Menge</th>
+                <th class="number">Einzelpreis</th>
+                <th class="number">Gesamt</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in line_items %}
+            <tr>
+                <td>
+                    <strong>{{ item.description }}</strong><br>
+                    <small style="color: #666;">{{ item.period }}</small>
+                </td>
+                <td class="number">{{ item.quantity }}</td>
+                <td class="number">{{ item.unit_price }} {{ invoice.currency }}</td>
+                <td class="number">{{ item.total }} {{ invoice.currency }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Totals -->
+    <div class="totals">
+        <table>
+            <tr>
+                <td>Zwischensumme (netto):</td>
+                <td>{{ invoice.subtotal }} {{ invoice.currency }}</td>
+            </tr>
+            <tr>
+                <td>
+                    {% if reverse_charge %}
+                    MwSt. (Reverse Charge):
+                    {% else %}
+                    MwSt. ({{ invoice.vat_rate }}%):
+                    {% endif %}
+                </td>
+                <td>{{ invoice.vat_amount }} {{ invoice.currency }}</td>
+            </tr>
+            <tr class="total-row">
+                <td><strong>Gesamtbetrag:</strong></td>
+                <td><strong>{{ invoice.total }} {{ invoice.currency }}</strong></td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Reverse Charge Notice -->
+    {% if reverse_charge %}
+    <div class="reverse-charge-notice">
+        <p style="margin: 0;">
+            <strong>Hinweis:</strong> Steuersch uldnerschaft des Leistungsempfängers gemäß Art. 196 MwStSystRL (Reverse Charge).
+            Die Umsatzsteuer wird vom Leistungsempfänger geschuldet.
+        </p>
+    </div>
+    {% endif %}
+
+    <!-- Payment Information -->
+    <div class="payment-info">
+        <h3>Zahlungsinformationen</h3>
+        <table>
+            <tr>
+                <td style="width: 40%;"><strong>Zahlungsziel:</strong></td>
+                <td>30 Tage netto (bis {{ invoice.due_date }})</td>
+            </tr>
+            <tr>
+                <td><strong>Bankverbindung:</strong></td>
+                <td>{{ company.bank }}</td>
+            </tr>
+            <tr>
+                <td><strong>IBAN:</strong></td>
+                <td>{{ company.iban }}</td>
+            </tr>
+            <tr>
+                <td><strong>BIC:</strong></td>
+                <td>{{ company.bic }}</td>
+            </tr>
+            <tr>
+                <td><strong>Verwendungszweck:</strong></td>
+                <td>{{ invoice.invoice_number }}</td>
+            </tr>
+        </table>
+        <p style="margin-top: 1cm;">Bitte geben Sie bei Ihrer Überweisung die Rechnungsnummer als Verwendungszweck an.</p>
+        <p>Bei Fragen zu dieser Rechnung wenden Sie sich bitte an: <strong>buchhaltung@0711.io</strong></p>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>
+            <strong>{{ company.name }}</strong><br>
+            {{ company.street }}, {{ company.postal_code }} {{ company.city }}<br>
+            Registergericht: {{ company.register_court }}, {{ company.register_number }}<br>
+            Geschäftsführer: {{ company.managing_director }}<br>
+            USt-IdNr.: {{ company.vat_id }}
+        </p>
+    </div>
+</body>
+</html>

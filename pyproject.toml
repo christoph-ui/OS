@@ -1,0 +1,191 @@
+[build-system]
+requires = ["setuptools>=68.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "0711-platform"
+version = "1.0.0"
+description = "0711 Intelligence Orchestration Platform - AI-First Enterprise OS"
+authors = [{name = "0711 Team", email = "engineering@0711.ai"}]
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "Proprietary"}
+
+dependencies = [
+    # Core Web Framework
+    "fastapi>=0.109.0",
+    "uvicorn[standard]>=0.27.0",
+    "websockets>=12.0",
+    "python-multipart>=0.0.6",
+    "python-jose[cryptography]>=3.3.0",
+    "passlib[bcrypt]>=1.7.4",
+
+    # Data & Database
+    "sqlalchemy>=2.0.25",
+    "alembic>=1.13.1",
+    "psycopg2-binary>=2.9.9",
+    "redis>=5.0.1",
+
+    # Pydantic & Settings
+    "pydantic>=2.5.3",
+    "pydantic-settings>=2.1.0",
+
+    # HTTP Clients
+    "httpx>=0.26.0",
+    "requests>=2.31.0",
+
+    # Environment & Config
+    "python-dotenv>=1.0.0",
+
+    # Lakehouse & Data Processing
+    "deltalake>=0.15.0",
+    "pyarrow>=14.0.0",
+    "pandas>=2.1.0",
+    "polars>=0.20.0",
+
+    # Vector Database
+    "pylance>=0.10.0",
+    "lancedb>=0.4.0",
+
+    # Document Processing
+    "pymupdf>=1.23.0",  # PDF extraction
+    "python-docx>=1.1.0",  # Word documents
+    "openpyxl>=3.1.0",  # Excel
+    "python-pptx>=0.6.23",  # PowerPoint
+    "beautifulsoup4>=4.12.0",  # HTML
+    "lxml>=5.0.0",  # XML processing
+    "markdown>=3.5.0",
+
+    # OCR & Image Processing
+    "pytesseract>=0.3.10",
+    "Pillow>=10.0.0",
+
+    # Email Processing
+    "email-validator>=2.1.0",
+
+    # ML & AI
+    "anthropic>=0.39.0",  # Claude integration for adaptive handlers
+    "sentence-transformers>=2.3.0",  # Embeddings
+    "transformers>=4.36.0",
+    "torch>=2.1.0",
+    "accelerate>=0.25.0",
+
+    # Ray & Distributed Computing
+    "ray[default,serve]>=2.9.0",
+
+    # vLLM Integration
+    "vllm>=0.3.0",
+
+    # Text Processing
+    "nltk>=3.8.0",
+    "spacy>=3.7.0",
+    "langdetect>=1.0.9",
+
+    # Search
+    "rank-bm25>=0.2.2",
+
+    # Async & Concurrency
+    "asyncio>=3.4.3",
+    "aiofiles>=23.2.0",
+    "aioboto3>=12.3.0",  # S3/MinIO async
+
+    # Monitoring & Logging
+    "loguru>=0.7.0",
+    "prometheus-client>=0.19.0",
+
+    # Utils
+    "tqdm>=4.66.0",
+    "click>=8.1.7",
+    "python-magic>=0.4.27",
+    "chardet>=5.2.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.4",
+    "pytest-asyncio>=0.23.3",
+    "pytest-cov>=4.1.0",
+    "black>=24.1.1",
+    "ruff>=0.1.14",
+    "mypy>=1.8.0",
+    "ipython>=8.20.0",
+    "jupyter>=1.0.0",
+]
+
+gpu = [
+    "cupy-cuda12x>=12.0.0",
+    "nvidia-ml-py>=12.535.0",
+]
+
+all = [
+    "0711-platform[dev,gpu]",
+]
+
+[project.scripts]
+"0711-console" = "console.backend.main:main"
+"0711-ingest" = "ingestion.orchestrator:main"
+"0711-serve-mcps" = "mcps.registry:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = [
+    "ingestion*",
+    "lakehouse*",
+    "inference*",
+    "mcps*",
+    "orchestrator*",
+    "console*",
+    "provisioning*",
+]
+
+[tool.black]
+line-length = 100
+target-version = ['py311']
+extend-exclude = '''
+/(
+  | node_modules
+  | build
+  | dist
+  | .venv
+)/
+'''
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "UP",  # pyupgrade
+]
+ignore = [
+    "E501",  # line too long (handled by black)
+    "B008",  # do not perform function calls in argument defaults
+    "C901",  # too complex
+]
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+asyncio_mode = "auto"
+addopts = [
+    "--verbose",
+    "--cov=ingestion",
+    "--cov=lakehouse",
+    "--cov=mcps",
+    "--cov=orchestrator",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+]

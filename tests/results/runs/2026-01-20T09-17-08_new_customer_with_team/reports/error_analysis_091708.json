@@ -1,0 +1,20 @@
+{
+  "report_id": "error_analysis_091708",
+  "journey_id": "new_customer_with_team",
+  "report_type": "error_analysis",
+  "title": "Production Signup Broken - Hardcoded Localhost API URL",
+  "related_steps": [
+    4
+  ],
+  "priority": "critical",
+  "affected_files": [
+    "apps/website/app/signup/page.tsx",
+    "apps/website/lib/api.ts",
+    "apps/website/next.config.js"
+  ],
+  "timestamp": "2026-01-20T09:17:08Z",
+  "actioned": false,
+  "actioned_at": null,
+  "action_taken": null,
+  "markdown_file": "/home/christoph.bertsch/0711/0711-OS/tests/results/runs/2026-01-20T09-17-08_new_customer_with_team/reports/error_analysis_091708.md"
+}

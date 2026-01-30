@@ -1,0 +1,94 @@
+.container {
+  min-height: 100vh;
+  padding: 8rem 2rem 4rem;
+  background: var(--light);
+}
+
+.content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.content h1 {
+  font-size: 2.5rem;
+  font-weight: 500;
+  margin-bottom: 3rem;
+  color: var(--dark);
+}
+
+.section {
+  margin-bottom: 3rem;
+}
+
+.section h2 {
+  font-size: 1.8rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  color: var(--dark);
+}
+
+.section h3 {
+  font-size: 1.3rem;
+  font-weight: 500;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: var(--dark);
+}
+
+.section h4 {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: var(--dark);
+}
+
+.section p {
+  margin-bottom: 1rem;
+  color: var(--mid-gray);
+  line-height: 1.8;
+}
+
+.section ul {
+  margin: 1rem 0 1rem 2rem;
+  color: var(--mid-gray);
+  line-height: 1.8;
+}
+
+.section li {
+  margin-bottom: 0.75rem;
+}
+
+.section a {
+  color: var(--orange);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.section a:hover {
+  color: var(--dark);
+  text-decoration: underline;
+}
+
+.section strong {
+  color: var(--dark);
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 6rem 1.5rem 3rem;
+  }
+
+  .content h1 {
+    font-size: 2rem;
+  }
+
+  .section h2 {
+    font-size: 1.5rem;
+  }
+
+  .section h3 {
+    font-size: 1.2rem;
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "eaton-intelligence": {
+      "command": "/home/christoph.bertsch/0711/0711-OS/mcps/eaton/start.sh",
+      "args": []
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "journey_id": "new_customer_with_team",
+  "step_number": 2,
+  "step_name": "Click Get Started Button - Signup Form",
+  "status": "pass",
+  "console_errors": [],
+  "network_failures": [],
+  "suggestions": [
+    "Signup form loads with all required fields (German localized)"
+  ],
+  "timestamp": "2026-01-20T10:43:54.370Z",
+  "duration_ms": null,
+  "screenshot_filename": null
+}

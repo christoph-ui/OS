@@ -1,0 +1,12 @@
+{
+  "journey_id": "test_journey",
+  "step_number": 1,
+  "step_name": "Test step",
+  "status": "pass",
+  "console_errors": [],
+  "network_failures": [],
+  "suggestions": [],
+  "timestamp": "2026-01-20T10:00:00Z",
+  "duration_ms": null,
+  "screenshot_filename": null
+}

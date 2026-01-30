@@ -1,0 +1,14 @@
+{
+  "journey_id": "new_customer_with_team",
+  "step_number": 1,
+  "step_name": "Navigate to Marketing Website",
+  "status": "pass",
+  "console_errors": [],
+  "network_failures": [],
+  "suggestions": [
+    "Homepage loads correctly with all content visible"
+  ],
+  "timestamp": "2026-01-20T10:42:22.280Z",
+  "duration_ms": null,
+  "screenshot_filename": null
+}

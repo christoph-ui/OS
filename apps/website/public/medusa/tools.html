@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>0711 Medusa — 39 MCP Tools Reference</title>
+    <meta name="description" content="Complete reference for all 39 MCP tools. Terminal control, behavior watchdog, approval gates, task bible, and more.">
+    <link rel="icon" type="image/svg+xml" href="icon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;600&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --black: #050505;
+            --charcoal: #0d0d0d;
+            --graphite: #1a1a1a;
+            --steel: #2a2a2a;
+            --gold: #C9A227;
+            --gold-light: #E8C547;
+            --gold-dim: #8B7355;
+            --cream: #F5F0E6;
+            --cream-dim: #A69F94;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Crimson Pro', Georgia, serif;
+            background: var(--black);
+            color: var(--cream);
+            line-height: 1.8;
+            overflow-x: hidden;
+            font-size: 18px;
+        }
+
+        ::selection { background: var(--gold); color: var(--black); }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            opacity: 0.03;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        h1, h2, h3, h4, .display {
+            font-family: 'Bebas Neue', sans-serif;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .mono { font-family: 'JetBrains Mono', monospace; }
+        .gold { color: var(--gold); }
+        .dim { color: var(--cream-dim); }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0; width: 100%;
+            padding: 2rem 4%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background: linear-gradient(to bottom, var(--black), transparent);
+        }
+
+        .logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.4rem;
+            letter-spacing: 0.2em;
+            color: var(--cream);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-mark {
+            width: 32px; height: 32px;
+            border: 2px solid currentColor;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--cream);
+            text-decoration: none;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 0; height: 1px;
+            background: var(--gold);
+            transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .nav-links a:hover::after { width: 100%; }
+        .nav-links a.active { color: var(--gold); }
+        .nav-links a.active::after { width: 100%; }
+
+        /* Hero */
+        .hero-mini {
+            padding: 12rem 6% 6rem;
+            text-align: center;
+        }
+
+        .hero-mini h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            line-height: 1;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero-mini p {
+            font-size: 1.3rem;
+            color: var(--cream-dim);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .tool-count {
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding: 1rem 2rem;
+            background: var(--graphite);
+            border: 1px solid var(--steel);
+        }
+
+        .tool-count .number {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 3rem;
+            color: var(--gold);
+            line-height: 1;
+        }
+
+        .tool-count .label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--cream-dim);
+        }
+
+        /* Category Navigation */
+        .category-nav {
+            position: sticky;
+            top: 80px;
+            background: var(--charcoal);
+            border-top: 1px solid var(--steel);
+            border-bottom: 1px solid var(--steel);
+            padding: 1.5rem 6%;
+            z-index: 100;
+            overflow-x: auto;
+        }
+
+        .category-nav ul {
+            display: flex;
+            gap: 0.5rem;
+            list-style: none;
+            max-width: 1400px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+
+        .category-nav a {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--cream-dim);
+            text-decoration: none;
+            padding: 0.6rem 1.2rem;
+            background: var(--graphite);
+            border: 1px solid var(--steel);
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .category-nav a:hover {
+            color: var(--gold);
+            border-color: var(--gold);
+        }
+
+        .category-nav a .count {
+            color: var(--gold);
+            margin-left: 0.5rem;
+        }
+
+        /* Tool Categories */
+        .tool-category {
+            padding: 6rem 6%;
+            border-bottom: 1px solid var(--steel);
+        }
+
+        .tool-category:nth-child(even) {
+            background: var(--charcoal);
+        }
+
+        .category-header {
+            max-width: 1400px;
+            margin: 0 auto 4rem;
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .category-number {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 6rem;
+            color: var(--steel);
+            line-height: 0.8;
+        }
+
+        .category-info h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin-bottom: 1rem;
+        }
+
+        .category-info p {
+            font-size: 1.1rem;
+            color: var(--cream-dim);
+            max-width: 600px;
+        }
+
+        .category-info .tool-total {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--gold);
+            margin-top: 1rem;
+            letter-spacing: 0.1em;
+        }
+
+        /* Tool Grid */
+        .tools-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 2px;
+            background: var(--steel);
+        }
+
+        /* Tool Card */
+        .tool-card {
+            background: var(--black);
+            padding: 2.5rem;
+            position: relative;
+            transition: background 0.3s;
+        }
+
+        .tool-card:hover {
+            background: var(--graphite);
+        }
+
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 0; height: 3px;
+            background: var(--gold);
+            transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .tool-card:hover::before {
+            width: 100%;
+        }
+
+        .tool-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gold);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tool-name::before {
+            content: '→';
+            color: var(--steel);
+        }
+
+        .tool-desc {
+            font-size: 1rem;
+            color: var(--cream);
+            margin-bottom: 1.5rem;
+            line-height: 1.7;
+        }
+
+        .tool-params {
+            margin-bottom: 1.5rem;
+        }
+
+        .tool-params-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.65rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--cream-dim);
+            margin-bottom: 0.75rem;
+        }
+
+        .param {
+            display: flex;
+            gap: 0.75rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--steel);
+            font-size: 0.9rem;
+        }
+
+        .param:last-child {
+            border-bottom: none;
+        }
+
+        .param-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--cream);
+            min-width: 120px;
+        }
+
+        .param-type {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--gold-dim);
+            min-width: 80px;
+        }
+
+        .param-desc {
+            color: var(--cream-dim);
+            font-size: 0.85rem;
+        }
+
+        .tool-example {
+            background: var(--graphite);
+            border: 1px solid var(--steel);
+            padding: 1rem 1.25rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--cream-dim);
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+
+        .tool-example .prompt {
+            color: var(--gold);
+        }
+
+        /* Quick Reference */
+        .quick-ref {
+            padding: 6rem 6%;
+            background: var(--graphite);
+        }
+
+        .quick-ref h2 {
+            text-align: center;
+            font-size: clamp(2rem, 4vw, 3rem);
+            margin-bottom: 3rem;
+        }
+
+        .quick-ref-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .quick-ref-card {
+            background: var(--charcoal);
+            border: 1px solid var(--steel);
+            padding: 2rem;
+        }
+
+        .quick-ref-card h3 {
+            font-size: 1.3rem;
+            color: var(--gold);
+            margin-bottom: 1.5rem;
+        }
+
+        .quick-ref-card ul {
+            list-style: none;
+        }
+
+        .quick-ref-card li {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--cream-dim);
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--steel);
+        }
+
+        .quick-ref-card li:last-child {
+            border-bottom: none;
+        }
+
+        .quick-ref-card li span {
+            color: var(--cream);
+            display: block;
+            margin-top: 0.25rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 4rem 6%;
+            border-top: 1px solid var(--steel);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-left {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .footer-logo { width: 50px; height: 50px; }
+
+        .footer-info {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--cream-dim);
+        }
+
+        .footer-info strong {
+            color: var(--gold);
+            font-weight: 500;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 3rem;
+        }
+
+        .footer-links a {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--cream-dim);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover { color: var(--gold); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .category-header { grid-template-columns: 1fr; }
+            .category-number { font-size: 4rem; }
+            .tools-grid { grid-template-columns: 1fr; }
+            footer { flex-direction: column; gap: 2rem; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <a href="index.html" class="logo">
+            <div class="logo-mark">07</div>
+            MEDUSA
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#features">Features</a></li>
+            <li><a href="tools.html" class="active">Tools</a></li>
+            <li><a href="index.html#download">Download</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero-mini">
+        <h1><span class="gold">39</span> MCP Tools</h1>
+        <p>Complete reference for every tool in 0711 Medusa. Terminal control, behavior monitoring, approval gates, task management, and more.</p>
+        <div class="tool-count">
+            <span class="number">39</span>
+            <span class="label">Tools<br>8 Categories</span>
+        </div>
+    </section>
+
+    <!-- Category Navigation -->
+    <div class="category-nav">
+        <ul>
+            <li><a href="#terminal">Terminal <span class="count">5</span></a></li>
+            <li><a href="#projects">Projects <span class="count">6</span></a></li>
+            <li><a href="#approval">Approval <span class="count">4</span></a></li>
+            <li><a href="#rules">Auto-Rules <span class="count">4</span></a></li>
+            <li><a href="#alerts">Alerts <span class="count">4</span></a></li>
+            <li><a href="#watchdog">Watchdog <span class="count">6</span></a></li>
+            <li><a href="#taskbible">Task Bible <span class="count">5</span></a></li>
+            <li><a href="#setup">Setup <span class="count">5</span></a></li>
+        </ul>
+    </div>
+
+    <!-- Terminal Operations -->
+    <section class="tool-category" id="terminal">
+        <div class="category-header">
+            <div class="category-number">01</div>
+            <div class="category-info">
+                <h2>Terminal Operations</h2>
+                <p>Control and monitor Claude Code terminals directly from Claude Desktop. Read output, send commands, search logs.</p>
+                <div class="tool-total">5 TOOLS</div>
+            </div>
+        </div>
+        <div class="tools-grid">
+            <div class="tool-card">
+                <div class="tool-name">bridge_read_terminal</div>
+                <div class="tool-desc">Read recent output from a Claude Code terminal. Essential for seeing what Claude Code is doing without switching apps.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Parameters</div>
+                    <div class="param">
+                        <span class="param-name">project_id</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Project to read from (default: active)</span>
+                    </div>
+                    <div class="param">
+                        <span class="param-name">lines</span>
+                        <span class="param-type">number</span>
+                        <span class="param-desc">Lines to read, 1-500 (default: 50)</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"Show me the last 100 lines from my terminal"</span>
+                </div>
+            </div>
+            <div class="tool-card">
+                <div class="tool-name">bridge_send_text</div>
+                <div class="tool-desc">Send text input to a Claude Code terminal. Type text as if at the keyboard. Can optionally press Enter after.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Parameters</div>
+                    <div class="param">
+                        <span class="param-name">text</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Text to send (max 1000 chars)</span>
+                    </div>
+                    <div class="param">
+                        <span class="param-name">press_enter</span>
+                        <span class="param-type">boolean</span>
+                        <span class="param-desc">Press Enter after (default: true)</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"Run 'npm test' in my terminal"</span>
+                </div>
+            </div>
+            <div class="tool-card">
+                <div class="tool-name">bridge_send_key</div>
+                <div class="tool-desc">Send special keys like Enter, Ctrl+C, Escape, Tab, and arrow keys to the terminal.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Parameters</div>
+                    <div class="param">
+                        <span class="param-name">key</span>
+                        <span class="param-type">enum</span>
+                        <span class="param-desc">enter, ctrl-c, ctrl-d, ctrl-z, escape, tab, up, down</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"Press Ctrl+C to stop the process"</span>
+                </div>
+            </div>
+            <div class="tool-card">
+                <div class="tool-name">bridge_search_output</div>
+                <div class="tool-desc">Search terminal output for patterns using regex. Find errors, warnings, or any text in recent output.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Parameters</div>
+                    <div class="param">
+                        <span class="param-name">pattern</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Regex pattern (e.g., 'error|warning')</span>
+                    </div>
+                    <div class="param">
+                        <span class="param-name">lines</span>
+                        <span class="param-type">number</span>
+                        <span class="param-desc">Lines to search (default: 100)</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"Search for errors in my terminal output"</span>
+                </div>
+            </div>
+            <div class="tool-card">
+                <div class="tool-name">bridge_sync_remote</div>
+                <div class="tool-desc">Sync logs from remote SSH projects. Fetch latest terminal output from the server.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Parameters</div>
+                    <div class="param">
+                        <span class="param-name">project_id</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Remote project to sync</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"Sync my remote server logs"</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Project Management -->
+    <section class="tool-category" id="projects">
+        <div class="category-header">
+            <div class="category-number">02</div>
+            <div class="category-info">
+                <h2>Project Management</h2>
+                <p>Manage multiple Claude Code projects across local and remote environments. Switch contexts, monitor status, add new projects.</p>
+                <div class="tool-total">6 TOOLS</div>
+            </div>
+        </div>
+        <div class="tools-grid">
+            <div class="tool-card">
+                <div class="tool-name">bridge_list_projects</div>
+                <div class="tool-desc">List all configured projects. Shows type (local/remote), path, and status. Indicates which is active.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Parameters</div>
+                    <div class="param">
+                        <span class="param-name">response_format</span>
+                        <span class="param-type">enum</span>
+                        <span class="param-desc">markdown or json</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"Show me all my projects"</span>
+                </div>
+            </div>
+            <div class="tool-card">
+                <div class="tool-name">bridge_add_project</div>
+                <div class="tool-desc">Add a new Claude Code project. Configure for local Mac terminal or remote SSH connection.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Parameters</div>
+                    <div class="param">
+                        <span class="param-name">id</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Unique ID (lowercase, hyphens)</span>
+                    </div>
+                    <div class="param">
+                        <span class="param-name">name</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Human-readable name</span>
+                    </div>
+                    <div class="param">
+                        <span class="param-name">type</span>
+                        <span class="param-type">enum</span>
+                        <span class="param-desc">local or remote</span>
+                    </div>
+                    <div class="param">
+                        <span class="param-name">path</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Project directory path</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"Add my project at ~/Code/my-app"</span>
+                </div>
+            </div>
+            <div class="tool-card">
+                <div class="tool-name">bridge_remove_project</div>
+                <div class="tool-desc">Remove a project from the bridge. Removes configuration only — does not delete actual files.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Parameters</div>
+                    <div class="param">
+                        <span class="param-name">project_id</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Project to remove</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"Remove the old-project config"</span>
+                </div>
+            </div>
+            <div class="tool-card">
+                <div class="tool-name">bridge_switch_project</div>
+                <div class="tool-desc">Switch to a different active project. Changes which project receives commands by default.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Parameters</div>
+                    <div class="param">
+                        <span class="param-name">project_id</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Project to activate</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"Switch to my backend project"</span>
+                </div>
+            </div>
+            <div class="tool-card">
+                <div class="tool-name">bridge_get_project_status</div>
+                <div class="tool-desc">Get detailed status including running state, recent activity, error counts, and pending approvals.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Parameters</div>
+                    <div class="param">
+                        <span class="param-name">project_id</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Project to check (default: active)</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"What's the status of my project?"</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Approval System -->
+    <section class="tool-category" id="approval">
+        <div class="category-header">
+            <div class="category-number">03</div>
+            <div class="category-info">
+                <h2>Approval System</h2>
+                <p>Review and authorize risky operations before execution. Complete control over what Claude Code can run.</p>
+                <div class="tool-total">4 TOOLS</div>
+            </div>
+        </div>
+        <div class="tools-grid">
+            <div class="tool-card">
+                <div class="tool-name">bridge_list_pending</div>
+                <div class="tool-desc">List all pending approval requests. Shows commands waiting for your review with context and risk levels.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Parameters</div>
+                    <div class="param">
+                        <span class="param-name">project_id</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Filter by project (optional)</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"What's waiting for my approval?"</span>
+                </div>
+            </div>
+            <div class="tool-card">
+                <div class="tool-name">bridge_request_approval</div>
+                <div class="tool-desc">Submit a command for approval. Typically called by Claude Code when it wants to run something risky.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Parameters</div>
+                    <div class="param">
+                        <span class="param-name">command</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Command requesting approval</span>
+                    </div>
+                    <div class="param">
+                        <span class="param-name">type</span>
+                        <span class="param-type">enum</span>
+                        <span class="param-desc">command, file_write, file_delete, network, install</span>
+                    </div>
+                    <div class="param">
+                        <span class="param-name">context</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Why this command is needed</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">(Called programmatically by Claude Code)</span>
+                </div>
+            </div>
+            <div class="tool-card">
+                <div class="tool-name">bridge_approve</div>
+                <div class="tool-desc">Approve a pending request. Marks as approved and optionally sends 'y' to the terminal to proceed.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Parameters</div>
+                    <div class="param">
+                        <span class="param-name">request_id</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Request to approve</span>
+                    </div>
+                    <div class="param">
+                        <span class="param-name">execute</span>
+                        <span class="param-type">boolean</span>
+                        <span class="param-desc">Also send 'y' to terminal (default: true)</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"Approve that database migration"</span>
+                </div>
+            </div>
+            <div class="tool-card">
+                <div class="tool-name">bridge_deny</div>
+                <div class="tool-desc">Deny a pending request. Marks as denied and optionally sends 'n' to the terminal.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Parameters</div>
+                    <div class="param">
+                        <span class="param-name">request_id</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Request to deny</span>
+                    </div>
+                    <div class="param">
+                        <span class="param-name">reason</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Optional denial reason</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"Deny that request, too risky"</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Auto-Approve Rules -->
+    <section class="tool-category" id="rules">
+        <div class="category-header">
+            <div class="category-number">04</div>
+            <div class="category-info">
+                <h2>Auto-Approve Rules</h2>
+                <p>Automatically approve trusted command patterns. Build rules for common operations to reduce interruptions.</p>
+                <div class="tool-total">4 TOOLS</div>
+            </div>
+        </div>
+        <div class="tools-grid">
+            <div class="tool-card">
+                <div class="tool-name">bridge_list_rules</div>
+                <div class="tool-desc">List all auto-approve rules. Shows patterns that automatically approve matching commands.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Parameters</div>
+                    <div class="param">
+                        <span class="param-name">response_format</span>
+                        <span class="param-type">enum</span>
+                        <span class="param-desc">markdown or json</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"Show my auto-approve rules"</span>
+                </div>
+            </div>
+            <div class="tool-card">
+                <div class="tool-name">bridge_add_rule</div>
+                <div class="tool-desc">Add an auto-approve rule. Commands matching the pattern are automatically approved (except critical risk).</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Parameters</div>
+                    <div class="param">
+                        <span class="param-name">name</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Human-readable name</span>
+                    </div>
+                    <div class="param">
+                        <span class="param-name">pattern</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Regex pattern to match</span>
+                    </div>
+                    <div class="param">
+                        <span class="param-name">path_whitelist</span>
+                        <span class="param-type">string[]</span>
+                        <span class="param-desc">Only approve if path matches</span>
+                    </div>
+                    <div class="param">
+                        <span class="param-name">expires_hours</span>
+                        <span class="param-type">number</span>
+                        <span class="param-desc">Hours until rule expires</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"Auto-approve all npm commands"</span>
+                </div>
+            </div>
+            <div class="tool-card">
+                <div class="tool-name">bridge_remove_rule</div>
+                <div class="tool-desc">Remove an auto-approve rule. The rule will no longer match commands.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Parameters</div>
+                    <div class="param">
+                        <span class="param-name">rule_id</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Rule to remove</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"Remove the npm auto-approve rule"</span>
+                </div>
+            </div>
+            <div class="tool-card">
+                <div class="tool-name">bridge_toggle_rule</div>
+                <div class="tool-desc">Enable or disable an auto-approve rule without removing it.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Parameters</div>
+                    <div class="param">
+                        <span class="param-name">rule_id</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Rule to toggle</span>
+                    </div>
+                    <div class="param">
+                        <span class="param-name">enabled</span>
+                        <span class="param-type">boolean</span>
+                        <span class="param-desc">Enable or disable</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"Disable the git rule temporarily"</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Smart Alerts -->
+    <section class="tool-category" id="alerts">
+        <div class="category-header">
+            <div class="category-number">05</div>
+            <div class="category-info">
+                <h2>Smart Alerts</h2>
+                <p>Get notified when specific patterns appear in terminal output. Never miss another error or warning.</p>
+                <div class="tool-total">4 TOOLS</div>
+            </div>
+        </div>
+        <div class="tools-grid">
+            <div class="tool-card">
+                <div class="tool-name">bridge_watch_for</div>
+                <div class="tool-desc">Set up a pattern alert. Watch for specific regex patterns in terminal output and get notified.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Parameters</div>
+                    <div class="param">
+                        <span class="param-name">pattern</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Regex pattern (e.g., 'error|failed')</span>
+                    </div>
+                    <div class="param">
+                        <span class="param-name">alert_id</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Custom ID (auto-generated if omitted)</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"Alert me if you see any errors"</span>
+                </div>
+            </div>
+            <div class="tool-card">
+                <div class="tool-name">bridge_stop_watching</div>
+                <div class="tool-desc">Remove a pattern alert. The pattern will no longer be monitored.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Parameters</div>
+                    <div class="param">
+                        <span class="param-name">alert_id</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Alert to stop</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"Stop watching for errors"</span>
+                </div>
+            </div>
+            <div class="tool-card">
+                <div class="tool-name">bridge_get_alerts</div>
+                <div class="tool-desc">Get all alerts or only triggered alerts. See which patterns have matched.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Parameters</div>
+                    <div class="param">
+                        <span class="param-name">triggered_only</span>
+                        <span class="param-type">boolean</span>
+                        <span class="param-desc">Only show triggered alerts (default: false)</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"Show me any triggered alerts"</span>
+                </div>
+            </div>
+            <div class="tool-card">
+                <div class="tool-name">bridge_clear_alerts</div>
+                <div class="tool-desc">Reset triggered alerts so they can trigger again. Does not remove the alerts.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Parameters</div>
+                    <div class="param">
+                        <span class="param-name">project_id</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Clear for project (or all)</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"Clear all triggered alerts"</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Behavior Watchdog -->
+    <section class="tool-category" id="watchdog">
+        <div class="category-header">
+            <div class="category-number">06</div>
+            <div class="category-info">
+                <h2>Behavior Watchdog</h2>
+                <p>Detect and stop AI shortcuts, laziness, and placeholder code. 20+ patterns monitor for common AI mistakes.</p>
+                <div class="tool-total">6 TOOLS</div>
+            </div>
+        </div>
+        <div class="tools-grid">
+            <div class="tool-card">
+                <div class="tool-name">bridge_watchdog_status</div>
+                <div class="tool-desc">Get watchdog status. Shows enabled state, pattern count, violation count, and all detection patterns.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Returns</div>
+                    <div class="param">
+                        <span class="param-name">enabled</span>
+                        <span class="param-type">boolean</span>
+                        <span class="param-desc">Whether watchdog is active</span>
+                    </div>
+                    <div class="param">
+                        <span class="param-name">pattern_count</span>
+                        <span class="param-type">number</span>
+                        <span class="param-desc">Total patterns (default + custom)</span>
+                    </div>
+                    <div class="param">
+                        <span class="param-name">violation_count</span>
+                        <span class="param-type">number</span>
+                        <span class="param-desc">Total violations detected</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"What's the watchdog status?"</span>
+                </div>
+            </div>
+            <div class="tool-card">
+                <div class="tool-name">bridge_watchdog_enable</div>
+                <div class="tool-desc">Enable the watchdog. Starts monitoring all terminals every 2 seconds. Sends ESC on violations.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">When Enabled</div>
+                    <div class="param">
+                        <span class="param-desc">Polls terminals every 2 seconds</span>
+                    </div>
+                    <div class="param">
+                        <span class="param-desc">Checks against 20+ patterns</span>
+                    </div>
+                    <div class="param">
+                        <span class="param-desc">Sends ESC to stop Claude on violations</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"Enable the behavior watchdog"</span>
+                </div>
+            </div>
+            <div class="tool-card">
+                <div class="tool-name">bridge_watchdog_disable</div>
+                <div class="tool-desc">Disable the watchdog. Stops monitoring. Existing violations remain in history.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Parameters</div>
+                    <div class="param">
+                        <span class="param-desc">No parameters required</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"Turn off the watchdog"</span>
+                </div>
+            </div>
+            <div class="tool-card">
+                <div class="tool-name">bridge_watchdog_add_pattern</div>
+                <div class="tool-desc">Add a custom detection pattern. Define additional behaviors to monitor beyond defaults.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Parameters</div>
+                    <div class="param">
+                        <span class="param-name">name</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Pattern name</span>
+                    </div>
+                    <div class="param">
+                        <span class="param-name">pattern</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Regex pattern (case-insensitive)</span>
+                    </div>
+                    <div class="param">
+                        <span class="param-name">description</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">What this pattern detects</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"Add a pattern for 'I'll create a stub'"</span>
+                </div>
+            </div>
+            <div class="tool-card">
+                <div class="tool-name">bridge_watchdog_remove_pattern</div>
+                <div class="tool-desc">Remove a custom pattern. Only custom patterns can be removed — defaults are protected.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Parameters</div>
+                    <div class="param">
+                        <span class="param-name">pattern_id</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Pattern to remove</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"Remove the stub pattern"</span>
+                </div>
+            </div>
+            <div class="tool-card">
+                <div class="tool-name">bridge_watchdog_violations</div>
+                <div class="tool-desc">Get violation history. See what shortcuts were caught, when, and what text triggered them.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Parameters</div>
+                    <div class="param">
+                        <span class="param-name">limit</span>
+                        <span class="param-type">number</span>
+                        <span class="param-desc">Max violations to return</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"Show me all watchdog violations"</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Task Bible -->
+    <section class="tool-category" id="taskbible">
+        <div class="category-header">
+            <div class="category-number">07</div>
+            <div class="category-info">
+                <h2>Task Bible</h2>
+                <p>Structured task management with persistence across sessions. Claude always knows what's done and what's next.</p>
+                <div class="tool-total">5 TOOLS</div>
+            </div>
+        </div>
+        <div class="tools-grid">
+            <div class="tool-card">
+                <div class="tool-name">bridge_get_task_bible</div>
+                <div class="tool-desc">Get the active task bible. Returns current task list with progress for a project.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Parameters</div>
+                    <div class="param">
+                        <span class="param-name">project_id</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Project to get tasks for</span>
+                    </div>
+                    <div class="param">
+                        <span class="param-name">bible_id</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Specific task bible ID</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"Show me my task list"</span>
+                </div>
+            </div>
+            <div class="tool-card">
+                <div class="tool-name">bridge_get_next_task</div>
+                <div class="tool-desc">Get the next task to work on. Respects dependencies and priorities to suggest what's next.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Parameters</div>
+                    <div class="param">
+                        <span class="param-name">bible_id</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Task Bible ID</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"What should I work on next?"</span>
+                </div>
+            </div>
+            <div class="tool-card">
+                <div class="tool-name">bridge_update_task_status</div>
+                <div class="tool-desc">Update a task's status. Mark as in_progress, completed, blocked, or cancelled.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Parameters</div>
+                    <div class="param">
+                        <span class="param-name">task_id</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Task to update</span>
+                    </div>
+                    <div class="param">
+                        <span class="param-name">status</span>
+                        <span class="param-type">enum</span>
+                        <span class="param-desc">pending, in_progress, completed, blocked, cancelled</span>
+                    </div>
+                    <div class="param">
+                        <span class="param-name">notes</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Optional notes about status change</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"Mark task 3 as complete"</span>
+                </div>
+            </div>
+            <div class="tool-card">
+                <div class="tool-name">bridge_add_task_note</div>
+                <div class="tool-desc">Add a progress note to a task. Document work done or issues encountered.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Parameters</div>
+                    <div class="param">
+                        <span class="param-name">task_id</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Task ID</span>
+                    </div>
+                    <div class="param">
+                        <span class="param-name">note</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Note to add</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"Add a note: 'Found edge case in auth'"</span>
+                </div>
+            </div>
+            <div class="tool-card">
+                <div class="tool-name">bridge_check_dependencies</div>
+                <div class="tool-desc">Check task dependencies. See what must be completed before a specific task can start.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Parameters</div>
+                    <div class="param">
+                        <span class="param-name">task_id</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Task to check dependencies for</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"What blocks task 5?"</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Setup Wizard -->
+    <section class="tool-category" id="setup">
+        <div class="category-header">
+            <div class="category-number">08</div>
+            <div class="category-info">
+                <h2>Setup Wizard</h2>
+                <p>Guide users through 0711 Medusa configuration. Auto-detect projects, test API keys, verify installation.</p>
+                <div class="tool-total">5 TOOLS</div>
+            </div>
+        </div>
+        <div class="tools-grid">
+            <div class="tool-card">
+                <div class="tool-name">setup_detect_folders</div>
+                <div class="tool-desc">Automatically detect project folders. Scans Desktop, Documents, Code for development folders.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Parameters</div>
+                    <div class="param">
+                        <span class="param-name">includeHidden</span>
+                        <span class="param-type">boolean</span>
+                        <span class="param-desc">Include hidden folders (default: false)</span>
+                    </div>
+                    <div class="param">
+                        <span class="param-name">recursive</span>
+                        <span class="param-type">boolean</span>
+                        <span class="param-desc">Scan subdirectories (default: false)</span>
+                    </div>
+                    <div class="param">
+                        <span class="param-name">maxDepth</span>
+                        <span class="param-type">number</span>
+                        <span class="param-desc">Max recursive depth (default: 2)</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"Find my project folders"</span>
+                </div>
+            </div>
+            <div class="tool-card">
+                <div class="tool-name">setup_add_folder</div>
+                <div class="tool-desc">Add a project folder to Medusa configuration. Configure with custom name and terminal app.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Parameters</div>
+                    <div class="param">
+                        <span class="param-name">folderPath</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Absolute path to folder</span>
+                    </div>
+                    <div class="param">
+                        <span class="param-name">projectName</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Custom name (optional)</span>
+                    </div>
+                    <div class="param">
+                        <span class="param-name">terminalApp</span>
+                        <span class="param-type">enum</span>
+                        <span class="param-desc">iTerm2 or Terminal.app</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"Add ~/Code/myapp to Medusa"</span>
+                </div>
+            </div>
+            <div class="tool-card">
+                <div class="tool-name">setup_get_status</div>
+                <div class="tool-desc">Check overall setup status. See what's configured and what steps remain.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Returns</div>
+                    <div class="param">
+                        <span class="param-desc">Claude Desktop installed/configured</span>
+                    </div>
+                    <div class="param">
+                        <span class="param-desc">Projects configured count</span>
+                    </div>
+                    <div class="param">
+                        <span class="param-desc">API keys status</span>
+                    </div>
+                    <div class="param">
+                        <span class="param-desc">Completion percentage</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"How's my setup looking?"</span>
+                </div>
+            </div>
+            <div class="tool-card">
+                <div class="tool-name">setup_run_complete</div>
+                <div class="tool-desc">Run automated setup process. Checks Claude Desktop, configures MCP server, restarts if needed.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Parameters</div>
+                    <div class="param">
+                        <span class="param-name">autoRestart</span>
+                        <span class="param-type">boolean</span>
+                        <span class="param-desc">Restart Claude Desktop automatically</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"Run the full setup"</span>
+                </div>
+            </div>
+            <div class="tool-card">
+                <div class="tool-name">setup_test_api_key</div>
+                <div class="tool-desc">Validate an API key before saving. Test OpenAI, Google AI, or Anthropic keys.</div>
+                <div class="tool-params">
+                    <div class="tool-params-label">Parameters</div>
+                    <div class="param">
+                        <span class="param-name">provider</span>
+                        <span class="param-type">enum</span>
+                        <span class="param-desc">openai, google, or anthropic</span>
+                    </div>
+                    <div class="param">
+                        <span class="param-name">apiKey</span>
+                        <span class="param-type">string</span>
+                        <span class="param-desc">Key to test</span>
+                    </div>
+                </div>
+                <div class="tool-example">
+                    <span class="prompt">"Test my OpenAI API key"</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Reference -->
+    <section class="quick-ref">
+        <h2>Quick Reference</h2>
+        <div class="quick-ref-grid">
+            <div class="quick-ref-card">
+                <h3>Terminal</h3>
+                <ul>
+                    <li>bridge_read_terminal <span>See terminal output</span></li>
+                    <li>bridge_send_text <span>Send commands</span></li>
+                    <li>bridge_send_key <span>Ctrl+C, Enter, etc.</span></li>
+                    <li>bridge_search_output <span>Find patterns</span></li>
+                </ul>
+            </div>
+            <div class="quick-ref-card">
+                <h3>Projects</h3>
+                <ul>
+                    <li>bridge_list_projects <span>Show all projects</span></li>
+                    <li>bridge_switch_project <span>Change active</span></li>
+                    <li>bridge_get_project_status <span>Check health</span></li>
+                </ul>
+            </div>
+            <div class="quick-ref-card">
+                <h3>Approval</h3>
+                <ul>
+                    <li>bridge_list_pending <span>See pending</span></li>
+                    <li>bridge_approve <span>Allow request</span></li>
+                    <li>bridge_deny <span>Block request</span></li>
+                </ul>
+            </div>
+            <div class="quick-ref-card">
+                <h3>Watchdog</h3>
+                <ul>
+                    <li>bridge_watchdog_enable <span>Start monitoring</span></li>
+                    <li>bridge_watchdog_status <span>Check status</span></li>
+                    <li>bridge_watchdog_violations <span>View caught</span></li>
+                </ul>
+            </div>
+            <div class="quick-ref-card">
+                <h3>Tasks</h3>
+                <ul>
+                    <li>bridge_get_next_task <span>What's next</span></li>
+                    <li>bridge_update_task_status <span>Mark progress</span></li>
+                    <li>bridge_check_dependencies <span>See blockers</span></li>
+                </ul>
+            </div>
+            <div class="quick-ref-card">
+                <h3>Alerts</h3>
+                <ul>
+                    <li>bridge_watch_for <span>Monitor pattern</span></li>
+                    <li>bridge_get_alerts <span>See triggered</span></li>
+                    <li>bridge_clear_alerts <span>Reset</span></li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-left">
+            <img src="icon.svg" alt="0711 Medusa" class="footer-logo">
+            <div class="footer-info">
+                <strong>0711 Medusa</strong><br>
+                Made in Stuttgart, Germany
+            </div>
+        </div>
+        <div class="footer-links">
+            <a href="index.html">Home</a>
+            <a href="https://github.com/0711-medusa">GitHub</a>
+            <a href="https://github.com/0711-medusa/issues">Issues</a>
+        </div>
+    </footer>
+</body>
+</html>

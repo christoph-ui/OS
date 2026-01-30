@@ -1,0 +1,33 @@
+VENDOR SERVICE AGREEMENT
+
+This Service Agreement ("Agreement") is entered into as of January 1, 2024.
+
+PARTIES:
+- Client: 0711 Intelligence GmbH, Munich, Germany
+- Vendor: Example Services GmbH, Berlin, Germany
+
+1. SERVICES
+Vendor agrees to provide software consulting services as described in Statement of Work.
+
+2. TERM
+This Agreement shall commence on January 1, 2024 and continue for 12 months.
+
+3. COMPENSATION
+Client agrees to pay Vendor EUR 5,000 per month for services rendered.
+Payment terms: Net 30 days from invoice date.
+
+4. CONFIDENTIALITY
+Both parties agree to maintain confidentiality of proprietary information.
+
+5. TERMINATION
+Either party may terminate with 30 days written notice.
+
+6. GOVERNING LAW
+This Agreement shall be governed by German law.
+
+7. DATA PROTECTION
+Vendor agrees to comply with GDPR and German data protection laws.
+
+SIGNATURES:
+Client: _________________    Date: January 1, 2024
+Vendor: _________________    Date: January 1, 2024

@@ -41,6 +41,12 @@ htmlcov/
 .dmypy.json
 dmypy.json
 
+# Electron/Medusa temporary builds
+medusa-temp/
+*.app/
+*.dmg
+*.exe
+
 # Databases & Logs
 *.sqlite
 *.db
@@ -58,6 +64,11 @@ models/*/
 *.gguf
 huggingface_cache/
 .cache/
+
+# LoRA training artifacts
+*.pt
+checkpoint-*/
+adapters/
 
 # IDE
 .vscode/

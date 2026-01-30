@@ -1,0 +1,16 @@
+[
+  {
+    "run_id": "2026-01-20T17-36-06_new_customer_signup",
+    "journey_id": "new_customer_signup",
+    "step_number": 2,
+    "step_name": "Onboarding - Data Upload",
+    "timestamp": "2026-01-20T17:36:06.306Z",
+    "console_errors": [],
+    "network_failures": [],
+    "suggestions": [],
+    "screenshot_path": null,
+    "acknowledged": false,
+    "acknowledged_at": null,
+    "action_taken": null
+  }
+]

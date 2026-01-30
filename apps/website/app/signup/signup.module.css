@@ -1,0 +1,135 @@
+.signupContainer {
+  min-height: 100vh;
+  background: var(--dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.signupBox {
+  background: #1a1a19;
+  border-radius: 16px;
+  padding: 3rem;
+  width: 100%;
+  max-width: 480px;
+}
+
+.signupBox h1 {
+  font-family: var(--font-poppins);
+  color: var(--light);
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  font-family: var(--font-lora);
+  color: #888;
+  margin-bottom: 2rem;
+}
+
+.error {
+  background: #3d1f1f;
+  border: 1px solid var(--orange);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  color: #ff8a80;
+}
+
+.formGroup {
+  margin-bottom: 1.5rem;
+}
+
+.formGroup label {
+  display: block;
+  color: #888;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-family: var(--font-poppins);
+}
+
+.input {
+  width: 100%;
+  padding: 0.875rem;
+  background: var(--dark);
+  border: 1px solid #333;
+  border-radius: 8px;
+  color: var(--light);
+  font-size: 1rem;
+  font-family: var(--font-lora);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--orange);
+}
+
+.submitButton {
+  width: 100%;
+  padding: 1rem;
+  background: var(--orange);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-poppins);
+  transition: all 0.3s ease;
+}
+
+.submitButton:hover:not(:disabled) {
+  background: #c86647;
+  transform: translateY(-1px);
+}
+
+.submitButton:disabled {
+  background: #666;
+  cursor: not-allowed;
+}
+
+.loginPrompt {
+  text-align: center;
+  margin-top: 1.5rem;
+  color: #666;
+  font-size: 0.875rem;
+}
+
+.loginPrompt a {
+  color: var(--orange);
+  text-decoration: none;
+}
+
+.loginPrompt a:hover {
+  text-decoration: underline;
+}
+
+.enterpriseSection {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #333;
+  text-align: center;
+}
+
+.enterpriseSection p {
+  color: #666;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+.enterpriseLink {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid var(--orange);
+  border-radius: 8px;
+  color: var(--orange);
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+}
+
+.enterpriseLink:hover {
+  background: var(--orange);
+  color: var(--light);
+}

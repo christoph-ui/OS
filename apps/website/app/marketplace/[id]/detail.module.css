@@ -1,0 +1,188 @@
+.container {
+  min-height: 100vh;
+  background-color: var(--cream);
+  padding: 6rem 2rem 4rem;
+}
+
+.content {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.breadcrumb {
+  margin-bottom: 2rem;
+  font-size: 0.9rem;
+  color: var(--gray);
+}
+
+.breadcrumb a {
+  color: var(--orange);
+  text-decoration: none;
+}
+
+.header {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+
+@media (max-width: 768px) {
+  .header {
+    grid-template-columns: 1fr;
+  }
+}
+
+.header h1 {
+  font-family: var(--font-heading);
+  font-size: 3rem;
+  font-weight: 700;
+  margin: 0 0 1rem 0;
+}
+
+.description {
+  font-size: 1.25rem;
+  color: var(--gray);
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.meta {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.category, .rating, .installs {
+  padding: 0.5rem 1rem;
+  background-color: var(--light-gray);
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.pricing {
+  padding: 2rem;
+  background-color: white;
+  border-radius: 16px;
+  border: 2px solid var(--orange);
+  text-align: center;
+  height: fit-content;
+}
+
+.price {
+  font-family: var(--font-heading);
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--black);
+  margin-bottom: 1.5rem;
+}
+
+.price span {
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: var(--gray);
+}
+
+.installButton {
+  width: 100%;
+  padding: 1rem 2rem;
+  background-color: var(--orange);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 1rem;
+}
+
+.installButton:hover:not(:disabled) {
+  background-color: #c86747;
+  transform: translateY(-2px);
+}
+
+.installButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.priceNote {
+  font-size: 0.85rem;
+  color: var(--gray);
+  margin: 0;
+}
+
+.section {
+  background-color: white;
+  padding: 2.5rem;
+  border-radius: 16px;
+  margin-bottom: 2rem;
+  border: 1.5px solid var(--light-gray);
+}
+
+.section h2 {
+  font-family: var(--font-heading);
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin: 0 0 1.5rem 0;
+}
+
+.featureList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.featureList li {
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  background-color: var(--cream);
+  border-radius: 8px;
+  padding-left: 2.5rem;
+  position: relative;
+}
+
+.featureList li::before {
+  content: '✓';
+  position: absolute;
+  left: 1rem;
+  color: var(--orange);
+  font-weight: 700;
+}
+
+.specs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.spec {
+  padding: 1rem;
+  background-color: var(--cream);
+  border-radius: 8px;
+}
+
+.spec strong {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--black);
+}
+
+.supportSection {
+  text-align: center;
+  padding: 2rem;
+  background-color: var(--light-gray);
+  border-radius: 12px;
+}
+
+.supportSection h3 {
+  margin: 0 0 1rem 0;
+}
+
+.supportSection a {
+  color: var(--orange);
+  text-decoration: none;
+  font-weight: 500;
+}

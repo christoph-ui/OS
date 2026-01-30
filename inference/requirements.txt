@@ -1,0 +1,28 @@
+# =============================================================================
+# 0711 Model Serving - Dependencies
+# =============================================================================
+
+# vLLM for model serving (requires CUDA)
+vllm>=0.3.0
+
+# Embeddings
+sentence-transformers>=2.2.0
+torch>=2.0.0
+
+# Web server
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+
+# HTTP client
+httpx>=0.26.0
+
+# Data handling
+numpy>=1.24.0
+pydantic>=2.5.0
+
+# Utilities
+python-dotenv>=1.0.0
+
+# Hugging Face for model downloads
+huggingface-hub>=0.20.0
+transformers>=4.36.0

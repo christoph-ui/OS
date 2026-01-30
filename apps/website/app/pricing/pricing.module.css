@@ -1,0 +1,1246 @@
+/* Hero Section */
+.hero {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 8rem 2rem 4rem;
+  background: var(--light);
+}
+
+.heroEyebrow {
+  font-family: var(--font-poppins);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--orange);
+  margin-bottom: 1.5rem;
+}
+
+.hero h1 {
+  font-size: clamp(2.5rem, 6vw, 4rem);
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  margin-bottom: 1.5rem;
+  max-width: 900px;
+}
+
+.hero h1 strong {
+  font-weight: 600;
+}
+
+.heroSubtitle {
+  font-size: 1.25rem;
+  color: var(--mid-gray);
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Section Header (Reusable) */
+.sectionHeader {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 4rem;
+}
+
+.sectionHeader h2 {
+  font-size: 2.5rem;
+  font-weight: 400;
+  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+}
+
+.sectionHeader p {
+  color: var(--mid-gray);
+  font-size: 1.1rem;
+}
+
+/* Savers Packs Section */
+.saversPacks {
+  padding: 8rem 2rem;
+  background: var(--light-gray);
+}
+
+.packsGrid {
+  max-width: 1300px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+}
+
+.packCard {
+  background: var(--light);
+  border: 2px solid var(--light-gray);
+  border-radius: 16px;
+  padding: 2.5rem;
+  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.packCard:hover {
+  border-color: var(--orange);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 40px rgba(20, 20, 19, 0.08);
+}
+
+.packCard.featured {
+  border-color: var(--orange);
+  border-width: 3px;
+  transform: scale(1.05);
+}
+
+.packBadge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--orange);
+  color: var(--light);
+  font-family: var(--font-poppins);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.4rem 1rem;
+  border-radius: 100px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.packCard h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--dark);
+}
+
+.packPrice {
+  margin-bottom: 1.5rem;
+}
+
+.packPrice .amount {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: var(--dark);
+}
+
+.saversAmount {
+  font-family: var(--font-poppins);
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--orange);
+  margin-bottom: 1.5rem;
+}
+
+.packBestFor {
+  font-family: var(--font-poppins);
+  font-size: 0.85rem;
+  color: var(--mid-gray);
+  margin-bottom: 1.5rem;
+}
+
+.packBestFor strong {
+  color: var(--dark);
+}
+
+.packIncludes {
+  list-style: none;
+  text-align: left;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: var(--light-gray);
+  border-radius: 8px;
+  flex-grow: 1;
+}
+
+.packIncludes li {
+  padding: 0.5rem 0;
+  font-size: 0.85rem;
+  color: var(--mid-gray);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.packIncludes li::before {
+  content: '→';
+  color: var(--orange);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.packCard.enterprise {
+  background: linear-gradient(135deg, var(--light) 0%, rgba(217, 119, 87, 0.02) 100%);
+}
+
+.customLabel {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--orange);
+}
+
+.packsNote {
+  text-align: center;
+  max-width: 600px;
+  margin: 3rem auto 0;
+  font-family: var(--font-poppins);
+  font-size: 0.9rem;
+  color: var(--mid-gray);
+}
+
+/* Loyalty Program */
+.loyalty {
+  padding: 8rem 2rem;
+  background: var(--dark);
+  color: var(--light);
+}
+
+.loyalty .sectionHeader h2 {
+  color: var(--light);
+}
+
+.loyalty .sectionHeader p {
+  color: var(--mid-gray);
+}
+
+.loyaltyGrid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.loyaltyCard {
+  background: rgba(250, 249, 245, 0.03);
+  border: 1px solid rgba(250, 249, 245, 0.1);
+  border-radius: 16px;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.loyaltyCard:hover {
+  background: rgba(250, 249, 245, 0.06);
+  border-color: var(--orange);
+  transform: translateY(-4px);
+}
+
+.loyaltyIcon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.loyaltyCard h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: var(--light);
+}
+
+.loyaltyThreshold {
+  font-family: var(--font-poppins);
+  font-size: 0.85rem;
+  color: var(--mid-gray);
+  margin-bottom: 1rem;
+}
+
+.loyaltyDescription {
+  font-size: 0.95rem;
+  color: rgba(250, 249, 245, 0.8);
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+  font-style: italic;
+}
+
+.loyaltyPerks {
+  list-style: none;
+  text-align: left;
+}
+
+.loyaltyPerks li {
+  padding: 0.4rem 0;
+  font-size: 0.9rem;
+  color: rgba(250, 249, 245, 0.8);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.loyaltyPerks li::before {
+  content: '•';
+  color: var(--orange);
+}
+
+.loyaltyExample {
+  text-align: center;
+  max-width: 700px;
+  margin: 3rem auto 0;
+  font-family: var(--font-poppins);
+  font-size: 0.95rem;
+  color: var(--mid-gray);
+}
+
+.loyaltyExample strong {
+  color: var(--orange);
+}
+
+/* Platform Subscriptions */
+.subscriptions {
+  padding: 8rem 2rem;
+  background: var(--light);
+}
+
+.subscriptionsGrid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.subscriptionCard {
+  background: var(--light);
+  border: 2px solid var(--light-gray);
+  border-radius: 16px;
+  padding: 2.5rem;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.subscriptionCard:hover {
+  border-color: var(--orange);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 40px rgba(20, 20, 19, 0.08);
+}
+
+.subscriptionCard.featured {
+  border-color: var(--orange);
+  border-width: 3px;
+}
+
+.subscriptionCard h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--dark);
+}
+
+.subscriptionPrice {
+  margin-bottom: 0.5rem;
+}
+
+.subscriptionPrice .amount {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: var(--dark);
+}
+
+.subscriptionPrice .period {
+  font-size: 1.2rem;
+  color: var(--mid-gray);
+}
+
+.subscriptionSavers {
+  font-family: var(--font-poppins);
+  font-size: 0.9rem;
+  color: var(--orange);
+  font-weight: 500;
+  margin-bottom: 2rem;
+}
+
+.subscriptionFeatures {
+  list-style: none;
+  margin-bottom: 2rem;
+}
+
+.subscriptionFeatures li {
+  padding: 0.6rem 0;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  color: var(--dark);
+}
+
+.subscriptionFeatures .check {
+  color: var(--green);
+  font-weight: 600;
+}
+
+.subscriptionNote {
+  text-align: center;
+  max-width: 700px;
+  margin: 3rem auto 0;
+  font-family: var(--font-poppins);
+  font-size: 0.9rem;
+  color: var(--mid-gray);
+}
+
+.subscriptionNote strong {
+  color: var(--dark);
+}
+
+/* Buttons */
+.btnPrimary {
+  font-family: var(--font-poppins);
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 1rem 2rem;
+  background: var(--dark);
+  color: var(--light);
+  border: none;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  width: 100%;
+}
+
+.btnPrimary:hover {
+  background: var(--orange);
+  transform: translateY(-2px);
+}
+
+.btnSecondary {
+  font-family: var(--font-poppins);
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 1rem 2rem;
+  background: transparent;
+  color: var(--dark);
+  border: 1.5px solid var(--dark);
+  border-radius: 100px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  width: 100%;
+}
+
+.btnSecondary:hover {
+  background: var(--dark);
+  color: var(--light);
+}
+
+/* MCP Marketplace Teaser */
+.mcpTeaser {
+  padding: 8rem 2rem;
+  background: var(--light-gray);
+}
+
+.mcpCategories {
+  max-width: 1000px;
+  margin: 0 auto 3rem;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.categoryCard {
+  background: var(--light);
+  border: 1px solid var(--light-gray);
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.categoryCard:hover {
+  border-color: var(--orange);
+  transform: translateY(-4px);
+}
+
+.categoryCard h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: var(--dark);
+}
+
+.categoryCard p {
+  font-size: 0.9rem;
+  color: var(--mid-gray);
+  line-height: 1.5;
+}
+
+.mcpNote {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto;
+  font-family: var(--font-poppins);
+  font-size: 0.9rem;
+  color: var(--mid-gray);
+}
+
+.mcpNote strong {
+  color: var(--dark);
+}
+
+/* Old MCP Marketplace (Keep for legacy) */
+.mcpMarketplace {
+  padding: 8rem 2rem;
+  background: var(--light-gray);
+}
+
+.mcpTable {
+  max-width: 1200px;
+  margin: 0 auto 4rem;
+  overflow-x: auto;
+}
+
+.mcpTable table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--light);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.mcpTable th,
+.mcpTable td {
+  padding: 1.25rem 1.5rem;
+  text-align: left;
+  border-bottom: 1px solid var(--light-gray);
+}
+
+.mcpTable th {
+  font-family: var(--font-poppins);
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--dark);
+  background: var(--light-gray);
+}
+
+.mcpTable td {
+  color: var(--mid-gray);
+  font-size: 0.95rem;
+}
+
+.mcpTable td strong {
+  color: var(--dark);
+}
+
+.mcpTable .small {
+  font-size: 0.8rem;
+  color: var(--mid-gray);
+}
+
+.mcpTable .highlight {
+  color: var(--orange);
+  font-weight: 600;
+}
+
+.mcpTable tr:hover td {
+  background: rgba(232, 230, 220, 0.3);
+}
+
+.connectors {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 3rem 0;
+}
+
+.connectors h3 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+
+.connectors > p {
+  text-align: center;
+  color: var(--mid-gray);
+  margin-bottom: 2rem;
+}
+
+.connectorGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.connectorTag {
+  font-family: var(--font-poppins);
+  font-size: 0.85rem;
+  background: var(--light);
+  border: 1px solid var(--light-gray);
+  padding: 0.6rem 1.2rem;
+  border-radius: 100px;
+  color: var(--dark);
+  transition: all 0.3s ease;
+}
+
+.connectorTag:hover {
+  border-color: var(--orange);
+  background: rgba(217, 119, 87, 0.05);
+}
+
+.connectorNote {
+  text-align: center;
+  font-family: var(--font-poppins);
+  font-size: 0.85rem;
+  color: var(--mid-gray);
+}
+
+/* Real Workforce Comparison */
+.comparison {
+  padding: 8rem 2rem;
+  background: var(--light);
+}
+
+.baselineRates {
+  max-width: 900px;
+  margin: 0 auto 5rem;
+}
+
+.baselineRates h3 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.baselineRates table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--light-gray);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.baselineRates th,
+.baselineRates td {
+  padding: 1rem 1.5rem;
+  text-align: left;
+  border-bottom: 1px solid var(--light);
+}
+
+.baselineRates th {
+  font-family: var(--font-poppins);
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--mid-gray);
+  color: var(--light);
+}
+
+.baselineRates td strong {
+  color: var(--dark);
+}
+
+.roiCalculator {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.roiCalculator h3 {
+  font-size: 1.8rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.roiCalculator > p {
+  text-align: center;
+  color: var(--mid-gray);
+  margin-bottom: 3rem;
+}
+
+.comparisonTable {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+
+.comparisonCol {
+  background: var(--light-gray);
+  border-radius: 16px;
+  padding: 3rem;
+}
+
+.comparisonCol h4 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--dark);
+}
+
+.comparisonCol ul {
+  list-style: none;
+  margin-bottom: 2rem;
+}
+
+.comparisonCol li {
+  padding: 0.6rem 0;
+  font-size: 1rem;
+  color: var(--mid-gray);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.comparisonCol li strong {
+  color: var(--dark);
+  font-weight: 600;
+}
+
+.comparisonCol .total {
+  background: var(--dark);
+  color: var(--light);
+  padding: 1.5rem;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.comparisonCol .total strong {
+  font-size: 1.4rem;
+  color: var(--orange);
+}
+
+.comparisonCol .total span {
+  font-family: var(--font-poppins);
+  font-size: 0.9rem;
+  color: var(--mid-gray);
+}
+
+.deploymentDesc {
+  font-size: 1.05rem;
+  color: var(--mid-gray);
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(176, 174, 165, 0.2);
+  line-height: 1.6;
+}
+
+.benefitsList {
+  list-style: none;
+  margin-bottom: 0;
+}
+
+.benefitsList li {
+  padding: 1.25rem 0;
+  font-size: 0.95rem;
+  color: var(--mid-gray);
+  line-height: 1.7;
+  border-bottom: 1px solid rgba(232, 230, 220, 0.4);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.benefitsList li:last-child {
+  border-bottom: none;
+}
+
+.benefitsList strong {
+  color: var(--dark);
+  font-weight: 600;
+  font-size: 1rem;
+  font-family: var(--font-poppins);
+}
+
+.idealFor {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: rgba(217, 119, 87, 0.05);
+  border-left: 3px solid var(--orange);
+  border-radius: 4px;
+  font-size: 0.95rem;
+  color: var(--dark);
+  line-height: 1.6;
+}
+
+.idealFor strong {
+  color: var(--orange);
+}
+
+.decisionGuide {
+  max-width: 900px;
+  margin: 4rem auto 0;
+  padding: 3rem;
+  background: var(--dark);
+  border-radius: 16px;
+  color: var(--light);
+}
+
+.decisionGuide h3 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 2rem;
+  color: var(--light);
+  text-align: center;
+}
+
+.decisionGuide p {
+  font-size: 1rem;
+  color: rgba(250, 249, 245, 0.85);
+  margin-bottom: 1.5rem;
+  line-height: 1.7;
+}
+
+.decisionGuide p strong {
+  color: var(--orange);
+  font-weight: 600;
+}
+
+.decisionGuide .hybrid {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(250, 249, 245, 0.2);
+  color: var(--light);
+}
+
+/* Developer Section */
+.developer {
+  padding: 8rem 2rem;
+  background: var(--dark);
+  color: var(--light);
+}
+
+.developerHeader {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 5rem;
+}
+
+.developerHeader h2 {
+  font-size: 2.5rem;
+  font-weight: 400;
+  margin-bottom: 1rem;
+  color: var(--light);
+}
+
+.developerHeader p {
+  font-size: 1.2rem;
+  color: var(--mid-gray);
+}
+
+.developerContent {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.developerEdition {
+  background: rgba(250, 249, 245, 0.03);
+  border: 1px solid rgba(250, 249, 245, 0.1);
+  border-radius: 20px;
+  padding: 3rem;
+  margin-bottom: 4rem;
+}
+
+.developerEdition h3 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--light);
+}
+
+.developerEdition .lead {
+  font-size: 1.1rem;
+  color: var(--mid-gray);
+  margin-bottom: 3rem;
+}
+
+.developerFeatures {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+
+.featureCol h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--orange);
+}
+
+.featureCol ul {
+  list-style: none;
+}
+
+.featureCol li {
+  padding: 0.4rem 0;
+  font-size: 0.9rem;
+  color: rgba(250, 249, 245, 0.8);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.featureCol li::before {
+  content: '→';
+  color: var(--orange);
+}
+
+.developerCta {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.developerCta .btnPrimary,
+.developerCta .btnSecondary {
+  width: auto;
+  padding: 1rem 2rem;
+}
+
+.sdkExample {
+  margin-bottom: 4rem;
+}
+
+.sdkExample h3 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  color: var(--light);
+  text-align: center;
+}
+
+.codeBlock {
+  background: rgba(20, 20, 19, 0.5);
+  border: 1px solid rgba(250, 249, 245, 0.1);
+  border-radius: 12px;
+  padding: 2rem;
+  font-family: 'SF Mono', 'Monaco', 'Consolas', monospace;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--green);
+  overflow-x: auto;
+}
+
+.revenueModel {
+  margin-bottom: 4rem;
+}
+
+.revenueModel h3 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 2rem;
+  color: var(--light);
+  text-align: center;
+}
+
+.revenueExample {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.revenueInputs,
+.revenueCalc {
+  background: rgba(250, 249, 245, 0.03);
+  border: 1px solid rgba(250, 249, 245, 0.1);
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.revenueInputs h4,
+.revenueCalc h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--orange);
+}
+
+.revenueInputs ul,
+.revenueCalc ul {
+  list-style: none;
+}
+
+.revenueInputs li,
+.revenueCalc li {
+  padding: 0.5rem 0;
+  font-size: 0.95rem;
+  color: rgba(250, 249, 245, 0.8);
+}
+
+.revenueCalc li strong {
+  color: var(--light);
+}
+
+.revenueCalc .revTotal {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(250, 249, 245, 0.2);
+  color: var(--orange);
+  font-size: 1.05rem;
+}
+
+.revenueCalc .revAnnual {
+  color: var(--light);
+  font-weight: 600;
+}
+
+.developerTiers {
+  margin-bottom: 4rem;
+}
+
+.developerTiers h3 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 2rem;
+  color: var(--light);
+  text-align: center;
+}
+
+.developerTiers table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(250, 249, 245, 0.03);
+  border: 1px solid rgba(250, 249, 245, 0.1);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.developerTiers th,
+.developerTiers td {
+  padding: 1rem 1.5rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(250, 249, 245, 0.1);
+}
+
+.developerTiers th {
+  font-family: var(--font-poppins);
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--orange);
+  background: rgba(217, 119, 87, 0.1);
+}
+
+.developerTiers td {
+  color: rgba(250, 249, 245, 0.8);
+  font-size: 0.9rem;
+}
+
+.developerTiers tr:hover td {
+  background: rgba(250, 249, 245, 0.05);
+}
+
+.developerResources h3 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 2rem;
+  color: var(--light);
+  text-align: center;
+}
+
+.resourcesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.resourceCard {
+  background: rgba(250, 249, 245, 0.03);
+  border: 1px solid rgba(250, 249, 245, 0.1);
+  border-radius: 12px;
+  padding: 2rem;
+  transition: all 0.3s ease;
+}
+
+.resourceCard:hover {
+  border-color: var(--orange);
+  transform: translateY(-4px);
+}
+
+.resourceCard h4 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--light);
+}
+
+.resourceCard ul {
+  list-style: none;
+  margin-bottom: 1.5rem;
+}
+
+.resourceCard li {
+  padding: 0.4rem 0;
+  font-size: 0.9rem;
+  color: rgba(250, 249, 245, 0.7);
+}
+
+.resourceCard a {
+  font-family: var(--font-poppins);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--orange);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.resourceCard a:hover {
+  color: var(--light);
+}
+
+/* FAQ */
+.faq {
+  padding: 8rem 2rem;
+  background: var(--light-gray);
+}
+
+.faqGrid {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+.faqItem {
+  background: var(--light);
+  border: 1px solid var(--light-gray);
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.faqItem h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: var(--dark);
+}
+
+.faqItem p {
+  font-size: 0.95rem;
+  color: var(--mid-gray);
+  line-height: 1.6;
+}
+
+/* Enterprise CTA */
+.enterpriseCta {
+  padding: 8rem 2rem;
+  background: var(--dark);
+  color: var(--light);
+  text-align: center;
+}
+
+.enterpriseCta h2 {
+  font-size: 2.5rem;
+  font-weight: 400;
+  margin-bottom: 1rem;
+  color: var(--light);
+}
+
+.enterpriseCta p {
+  font-size: 1.2rem;
+  color: var(--mid-gray);
+  margin-bottom: 2rem;
+}
+
+.enterpriseCta .btnPrimary {
+  width: auto;
+  padding: 1.25rem 3rem;
+}
+
+.enterpriseCta .btnPrimary:hover {
+  background: var(--orange);
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .packsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 1024px) {
+  .loyaltyGrid,
+  .subscriptionsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .mcpCategories {
+    grid-template-columns: 1fr;
+  }
+
+  .developerFeatures,
+  .resourcesGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .revenueExample {
+    grid-template-columns: 1fr;
+  }
+
+  .comparisonTable {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+  .heroSubtitle {
+    font-size: 1.1rem;
+  }
+
+  .sectionHeader h2 {
+    font-size: 2rem;
+  }
+
+  .packsGrid,
+  .loyaltyGrid,
+  .subscriptionsGrid,
+  .faqGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .packCard.featured {
+    transform: scale(1);
+  }
+
+  .mcpTable,
+  .baselineRates table,
+  .developerTiers table {
+    font-size: 0.85rem;
+  }
+
+  .mcpTable th,
+  .mcpTable td,
+  .baselineRates th,
+  .baselineRates td,
+  .developerTiers th,
+  .developerTiers td {
+    padding: 0.75rem;
+  }
+
+  .codeBlock {
+    font-size: 0.75rem;
+    padding: 1.5rem;
+  }
+
+  .developerCta {
+    flex-direction: column;
+  }
+
+  .developerCta .btnPrimary,
+  .developerCta .btnSecondary {
+    width: 100%;
+  }
+}

@@ -1,0 +1,249 @@
+version: '3.8'
+
+services:
+  # ============================================================================
+  # Setup Wizard (runs during initial setup)
+  # ============================================================================
+  wizard:
+    build:
+      context: ../provisioning
+      dockerfile: Dockerfile
+    ports:
+      - "${WIZARD_PORT:-8090}:8090"
+    volumes:
+      - /home:/mnt/home:ro
+      - /data:/mnt/data:ro
+      - ${INSTALL_DIR:-/opt/0711}/config:/app/config
+      - ${INSTALL_DIR:-/opt/0711}/data:/app/data
+    environment:
+      - LAKEHOUSE_PATH=/app/data/lakehouse
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+    networks:
+      - 0711-network
+    profiles:
+      - setup
+
+  # ============================================================================
+  # Object Storage (MinIO - S3 compatible)
+  # ============================================================================
+  minio:
+    image: minio/minio:latest
+    command: server /data --console-address ":9001"
+    ports:
+      - "${MINIO_PORT:-9000}:9000"
+      - "${MINIO_CONSOLE_PORT:-9001}:9001"
+    volumes:
+      - ${INSTALL_DIR:-/opt/0711}/data/minio:/data
+    environment:
+      - MINIO_ROOT_USER=${MINIO_ACCESS_KEY:-0711admin}
+      - MINIO_ROOT_PASSWORD=${MINIO_SECRET_KEY}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+    networks:
+      - 0711-network
+
+  # ============================================================================
+  # vLLM Inference Server (Mixtral-8x7B)
+  # ============================================================================
+  vllm:
+    build:
+      context: ../inference
+      dockerfile: Dockerfile
+    ports:
+      - "${VLLM_PORT:-8001}:8000"
+    environment:
+      - MODEL_NAME=${BASE_MODEL:-mistralai/Mixtral-8x7B-Instruct-v0.1}
+      - TENSOR_PARALLEL_SIZE=1
+      - GPU_MEMORY_UTILIZATION=0.85
+      - MAX_MODEL_LEN=32768
+      - MAX_NUM_SEQS=256
+    volumes:
+      - ${INSTALL_DIR:-/opt/0711}/data/models:/root/.cache/huggingface
+      - ${INSTALL_DIR:-/opt/0711}/data/adapters:/adapters
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 20s
+      retries: 5
+    networks:
+      - 0711-network
+
+  # ============================================================================
+  # Ingestion Service (runs ingestion jobs)
+  # ============================================================================
+  ingestion:
+    build:
+      context: ..
+      dockerfile: build/Dockerfile.ingestion
+      args:
+        BASE_IMAGE: 0711-base:latest
+    volumes:
+      - ${INSTALL_DIR:-/opt/0711}/data/lakehouse:/app/lakehouse
+      - ${INSTALL_DIR:-/opt/0711}/data/uploads:/app/uploads:ro
+      - ${INSTALL_DIR:-/opt/0711}/logs:/app/logs
+    environment:
+      - LAKEHOUSE_PATH=/app/lakehouse
+      - VLLM_URL=http://vllm:8000
+      - EMBEDDING_MODEL=${EMBEDDING_MODEL:-intfloat/multilingual-e5-large}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      - minio
+      - vllm
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    networks:
+      - 0711-network
+    profiles:
+      - ingestion
+
+  # ============================================================================
+  # Ray Head Node (MCP orchestration)
+  # ============================================================================
+  ray-head:
+    build:
+      context: ..
+      dockerfile: build/Dockerfile.compute
+      args:
+        BASE_IMAGE: 0711-base:latest
+    ports:
+      - "${RAY_DASHBOARD_PORT:-8265}:8265"  # Ray dashboard
+      - "6379:6379"  # Ray GCS
+      - "8000:8000"  # Ray Serve
+    environment:
+      - RAY_HEAD_SERVICE_HOST=ray-head
+      - LAKEHOUSE_PATH=/app/lakehouse
+      - VLLM_URL=http://vllm:8000
+    volumes:
+      - ${INSTALL_DIR:-/opt/0711}/data/lakehouse:/app/lakehouse:ro
+      - ${INSTALL_DIR:-/opt/0711}/logs:/app/logs
+    command: >
+      bash -c "
+        ray start --head --dashboard-host=0.0.0.0 --port=6379 --num-cpus=4 &&
+        python -m mcps.serve
+      "
+    shm_size: '4gb'
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    depends_on:
+      - vllm
+    networks:
+      - 0711-network
+
+  # ============================================================================
+  # Ray Worker Nodes (additional compute for scaling)
+  # ============================================================================
+  ray-worker:
+    build:
+      context: ..
+      dockerfile: build/Dockerfile.compute
+      args:
+        BASE_IMAGE: 0711-base:latest
+    environment:
+      - RAY_HEAD_SERVICE_HOST=ray-head
+      - LAKEHOUSE_PATH=/app/lakehouse
+    volumes:
+      - ${INSTALL_DIR:-/opt/0711}/data/lakehouse:/app/lakehouse:ro
+    command: ray start --address=ray-head:6379 --num-cpus=4 --block
+    shm_size: '2gb'
+    deploy:
+      replicas: 2
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    depends_on:
+      - ray-head
+    networks:
+      - 0711-network
+
+  # ============================================================================
+  # Console Backend (API + WebSocket)
+  # ============================================================================
+  console-backend:
+    build:
+      context: ../console/backend
+      dockerfile: Dockerfile
+    ports:
+      - "${API_PORT:-8080}:8080"
+    environment:
+      - RAY_ADDRESS=http://ray-head:8000
+      - VLLM_URL=http://vllm:8000
+      - LAKEHOUSE_PATH=/app/lakehouse
+      - MINIO_ENDPOINT=minio:9000
+      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY:-0711admin}
+      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
+      - JWT_SECRET=${JWT_SECRET}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+    volumes:
+      - ${INSTALL_DIR:-/opt/0711}/data/lakehouse:/app/lakehouse
+      - ${INSTALL_DIR:-/opt/0711}/logs:/app/logs
+    depends_on:
+      - ray-head
+      - vllm
+      - minio
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - 0711-network
+
+  # ============================================================================
+  # Console Frontend (React UI)
+  # ============================================================================
+  console-frontend:
+    build:
+      context: ../console/frontend
+      dockerfile: Dockerfile
+    ports:
+      - "${CONSOLE_PORT:-3000}:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:${API_PORT:-8080}
+      - REACT_APP_WS_URL=ws://localhost:${API_PORT:-8080}/ws
+    depends_on:
+      - console-backend
+    networks:
+      - 0711-network
+
+# ============================================================================
+# Networks
+# ============================================================================
+networks:
+  0711-network:
+    driver: bridge
+    name: 0711-network
+
+# ============================================================================
+# Volumes (optional - for persistence)
+# ============================================================================
+volumes:
+  lakehouse_data:
+    name: 0711_lakehouse
+  model_cache:
+    name: 0711_models
+  minio_data:
+    name: 0711_minio

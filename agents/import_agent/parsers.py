@@ -83,10 +83,15 @@ class BMECatParser(BaseParser):
     def detect_version(self, content: bytes) -> str:
         """Detect BMECat version"""
         header = content[:5000].decode("utf-8", errors="ignore")
-        
+
         if "bmecat/2005" in header.lower():
             return "2005"
         elif "bmecat/1.2" in header.lower():
+            return "1.2"
+        # Also check for version attribute like <BMECAT version="2005">
+        elif 'version="2005"' in header or "version='2005'" in header:
+            return "2005"
+        elif 'version="1.2"' in header or "version='1.2'" in header:
             return "1.2"
         else:
             return "1.0"
@@ -102,9 +107,12 @@ class BMECatParser(BaseParser):
             version = self.detect_version(content)
             result.version = version
             
-            # Count articles
+            # Count articles - look for </ARTICLE> closing tags which are unique
             text = content.decode("utf-8", errors="ignore")
-            result.record_count = text.lower().count("<article") or text.lower().count("<artikel")
+            article_count = text.upper().count("</ARTICLE>")
+            if article_count == 0:
+                article_count = text.upper().count("</ARTIKEL>")
+            result.record_count = article_count
             
             # Extract sample fields
             root = ET.fromstring(content)
@@ -114,12 +122,12 @@ class BMECatParser(BaseParser):
             if article:
                 result.fields = self._extract_field_names(article)
             
-            # Get supplier info
-            supplier = root.find(".//SUPPLIER") or root.find(".//supplier")
-            if supplier:
-                name = supplier.find("SUPPLIER_NAME") or supplier.find("supplier_name")
-                if name is not None and name.text:
-                    result.metadata["supplier"] = name.text
+            # Get supplier info - use iteration to avoid xpath issues
+            for elem in root.iter():
+                if elem.tag in ("SUPPLIER_NAME", "supplier_name"):
+                    if elem.text:
+                        result.metadata["supplier"] = elem.text.strip()
+                    break
             
         except Exception as e:
             result.errors.append(f"Analysis error: {e}")
@@ -333,7 +341,7 @@ class CSVParser(BaseParser):
     
     # Common field name patterns (German and English)
     FIELD_PATTERNS = {
-        "sku": [r"artikel.*nr", r"art.*nr", r"sku", r"product.*id", r"item.*no"],
+        "sku": [r"artikelnummer", r"artikel.*nr", r"art.*nr", r"sku", r"product.*id", r"item.*no"],
         "name": [r"bezeichnung", r"name", r"title", r"beschreibung.*kurz", r"short.*desc"],
         "description": [r"langtext", r"beschreibung.*lang", r"long.*desc", r"description"],
         "gtin": [r"ean", r"gtin", r"upc", r"barcode"],

@@ -849,13 +849,32 @@ async def seed_connectors():
         db.commit()
         print(f"✓ Created {len(CATEGORIES)} categories")
         
+        # Track categories for summary
+        category_map = {}
+        
         # Create connectors
         for conn_data in CONNECTORS:
-            # Extract category for mapping
-            category_name = conn_data.pop("category", "data_sources")
+            # Make a copy to avoid mutating the original
+            data = conn_data.copy()
             
-            connector = Connector(**conn_data, category=category_name)
+            # Extract category for mapping
+            category_name = data.pop("category", "data_sources")
+            
+            # Map short_description + long_description to description
+            short_desc = data.pop("short_description", "")
+            long_desc = data.pop("long_description", "")
+            data["description"] = f"{short_desc}\n\n{long_desc}".strip() if long_desc else short_desc
+            
+            # Remove fields that don't exist in the model
+            data.pop("supported_regions", None)
+            
+            connector = Connector(**data, category=category_name)
             db.add(connector)
+            
+            # Track for summary
+            if category_name not in category_map:
+                category_map[category_name] = []
+            category_map[category_name].append(data.get("display_name", data.get("name")))
         
         db.commit()
         print(f"✓ Created {len(CONNECTORS)} connectors")
@@ -866,11 +885,11 @@ async def seed_connectors():
         print("="*60)
         
         for cat in CATEGORIES:
-            count = len([c for c in CONNECTORS if c.get("category") == cat["id"] or CONNECTORS[CONNECTORS.index(c) if c in CONNECTORS else 0].get("category") == cat["id"]])
-            connectors_in_cat = [c["display_name"] for c in CONNECTORS if c.get("category") == cat["id"]]
-            print(f"\n{cat['icon']} {cat['display_name']}")
-            for name in connectors_in_cat:
-                print(f"   • {name}")
+            cat_id = cat["id"]
+            if cat_id in category_map:
+                print(f"\n{cat['icon']} {cat['display_name']}")
+                for name in category_map[cat_id]:
+                    print(f"   • {name}")
         
         print("\n" + "="*60)
         print(f"Total: {len(CONNECTORS)} connectors in {len(CATEGORIES)} categories")

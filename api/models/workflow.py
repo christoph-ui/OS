@@ -22,7 +22,7 @@ class Workflow(Base):
 
     # Developer (third-party workflow creator)
     # Null = first-party workflow created by 0711
-    developer_id = Column(UUID(as_uuid=True), ForeignKey("mcp_developers.id"), nullable=True, index=True)
+    developer_id = Column(UUID(as_uuid=True), ForeignKey("connector_developers.id"), nullable=True, index=True)
 
     # Basic information
     name = Column(String(255), nullable=False, unique=True, index=True)  # e.g., "product-syndication"
@@ -84,7 +84,7 @@ class Workflow(Base):
     published_at = Column(DateTime(timezone=True))
 
     # Relationships
-    developer = relationship("MCPDeveloper", foreign_keys=[developer_id])
+    developer = relationship("ConnectorDeveloper", foreign_keys=[developer_id])
     approved_by = relationship("User", foreign_keys=[approved_by_id])
     definitions = relationship("WorkflowDefinition", back_populates="workflow", cascade="all, delete-orphan")
     subscriptions = relationship("WorkflowSubscription", back_populates="workflow", cascade="all, delete-orphan")

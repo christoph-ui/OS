@@ -1,6 +1,4 @@
-const colors = {
-  lightGray: '#e8e6dc',
-};
+import { colors } from '@/lib/theme';
 
 interface SkeletonProps {
   width?: string | number;

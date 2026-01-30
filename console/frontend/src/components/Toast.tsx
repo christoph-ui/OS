@@ -1,16 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, useCallback, ReactNode } from 'react';
-
-const colors = {
-  dark: '#1e293b',
-  light: '#faf9f5',
-  midGray: '#94a3b8',
-  orange: '#d97757',
-  green: '#788c5d',
-  red: '#d75757',
-  blue: '#6a9bcc',
-};
+import { colors } from '@/lib/theme';
 
 type ToastType = 'success' | 'error' | 'info' | 'warning';
 

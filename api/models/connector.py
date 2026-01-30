@@ -113,6 +113,7 @@ class Connector(Base):
     developer = relationship("ConnectorDeveloper", back_populates="connectors")
     approved_by = relationship("User", foreign_keys=[approved_by_id])
     connections = relationship("Connection", back_populates="connector", cascade="all, delete-orphan")
+    credentials = relationship("ConnectionCredential", back_populates="connector")
     reviews = relationship("ConnectorReview", back_populates="connector", cascade="all, delete-orphan")
 
     def __repr__(self):

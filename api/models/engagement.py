@@ -5,7 +5,7 @@ Represents customer-expert engagements
 
 from sqlalchemy import Column, String, Integer, Text, DateTime, ForeignKey, func
 from sqlalchemy.dialects.postgresql import UUID, ARRAY
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, synonym
 import uuid
 
 from ..database import Base
@@ -32,9 +32,9 @@ class Engagement(Base):
     connectors_used = Column(ARRAY(String))  # Connectors being utilized in this engagement
     deliverables = Column(Text)  # Description of deliverables
     estimated_hours = Column(Integer)
-    
+
     # Legacy alias
-    mcps_used = connectors_used
+    mcps_used = synonym('connectors_used')
 
     # Status
     status = Column(String(20), default="active")  # pending, active, paused, completed, cancelled

@@ -1,14 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-
-const colors = {
-  dark: '#1e293b',
-  light: '#faf9f5',
-  midGray: '#94a3b8',
-  lightGray: '#e8e6dc',
-  orange: '#d97757',
-};
+import { colors } from '@/lib/theme';
 
 interface PartnerInfo {
   id: string;

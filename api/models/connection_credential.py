@@ -50,13 +50,13 @@ class ConnectionCredential(Base):
 
     # Foreign keys
     customer_id = Column(UUID(as_uuid=True), ForeignKey("customers.id"), nullable=False, index=True)
-    mcp_installation_id = Column(
+    connection_id = Column(
         UUID(as_uuid=True),
-        ForeignKey("mcp_installations.id"),
+        ForeignKey("connections.id"),
         nullable=False,
         index=True
     )
-    mcp_id = Column(UUID(as_uuid=True), ForeignKey("mcps.id"), nullable=False, index=True)
+    connector_id = Column(UUID(as_uuid=True), ForeignKey("connectors.id"), nullable=False, index=True)
 
     # Connection type
     connection_type = Column(Enum(ConnectionType), nullable=False)
@@ -116,8 +116,8 @@ class ConnectionCredential(Base):
 
     # Relationships
     customer = relationship("Customer")
-    mcp = relationship("MCP")
-    mcp_installation = relationship("MCPInstallation")
+    connector = relationship("Connector", back_populates="credentials")
+    connection = relationship("Connection", back_populates="credentials")
     created_by = relationship("User", foreign_keys=[created_by_id])
 
     def __repr__(self):

@@ -31,49 +31,43 @@ from api.models.connector_category import ConnectorCategory
 
 CATEGORIES = [
     {
-        "id": "market_intelligence",
-        "name": "market_intelligence",
-        "display_name": "Market Intelligence",
+        "slug": "market_intelligence",
+        "name": "Market Intelligence",
         "description": "Wettbewerb, Preise, Marktanalyse",
         "icon": "📊",
         "sort_order": 1,
     },
     {
-        "id": "sales_channels",
-        "name": "sales_channels",
-        "display_name": "Sales Channels",
+        "slug": "sales_channels",
+        "name": "Sales Channels",
         "description": "Marktplätze und Vertriebskanäle",
         "icon": "🛒",
         "sort_order": 2,
     },
     {
-        "id": "tenders",
-        "name": "tenders",
-        "display_name": "Ausschreibungen",
+        "slug": "tenders",
+        "name": "Ausschreibungen",
         "description": "Öffentliche Vergabe und Tenders",
         "icon": "📋",
         "sort_order": 3,
     },
     {
-        "id": "syndication",
-        "name": "syndication",
-        "display_name": "Syndication",
+        "slug": "syndication",
+        "name": "Syndication",
         "description": "Content-Verteilung und Katalogexport",
         "icon": "📤",
         "sort_order": 4,
     },
     {
-        "id": "data_enrichment",
-        "name": "data_enrichment",
-        "display_name": "Data Enrichment",
+        "slug": "data_enrichment",
+        "name": "Data Enrichment",
         "description": "Datenanreicherung und Klassifikation",
         "icon": "✨",
         "sort_order": 5,
     },
     {
-        "id": "data_sources",
-        "name": "data_sources",
-        "display_name": "Data Sources",
+        "slug": "data_sources",
+        "name": "Data Sources",
         "description": "Datenquellen und Importe",
         "icon": "🗄️",
         "sort_order": 6,
@@ -867,6 +861,8 @@ async def seed_connectors():
             
             # Remove fields that don't exist in the model
             data.pop("supported_regions", None)
+            data.pop("supported_industries", None)
+            data.pop("supported_markets", None)
             
             connector = Connector(**data, category=category_name)
             db.add(connector)
@@ -885,10 +881,10 @@ async def seed_connectors():
         print("="*60)
         
         for cat in CATEGORIES:
-            cat_id = cat["id"]
-            if cat_id in category_map:
-                print(f"\n{cat['icon']} {cat['display_name']}")
-                for name in category_map[cat_id]:
+            cat_slug = cat["slug"]
+            if cat_slug in category_map:
+                print(f"\n{cat['icon']} {cat['name']}")
+                for name in category_map[cat_slug]:
                     print(f"   • {name}")
         
         print("\n" + "="*60)

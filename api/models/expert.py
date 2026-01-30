@@ -5,7 +5,7 @@ Represents AI-augmented experts in the marketplace
 
 from sqlalchemy import Column, String, Integer, Text, DECIMAL, DateTime, func, Boolean
 from sqlalchemy.dialects.postgresql import UUID, ARRAY, JSONB
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, synonym
 import uuid
 
 from ..database import Base
@@ -32,9 +32,9 @@ class Expert(Base):
     # Specializations
     specializations = Column(ARRAY(String))  # ["tax", "legal", "finance"]
     connector_expertise = Column(ARRAY(String))  # ["CTAX", "LAW", "FP&A"]
-    
+
     # Legacy alias for backward compatibility
-    mcp_expertise = connector_expertise
+    mcp_expertise = synonym('connector_expertise')
 
     # Credentials
     certifications = Column(JSONB)  # List of certifications

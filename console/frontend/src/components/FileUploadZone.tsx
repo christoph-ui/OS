@@ -1,13 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-
-const colors = {
-  dark: '#1e293b',
-  lightGray: '#e8e6dc',
-  orange: '#d97757',
-  midGray: '#94a3b8',
-};
+import { colors } from '@/lib/theme';
 
 interface FileUploadZoneProps {
   onFilesSelected: (files: File[]) => void;

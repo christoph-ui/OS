@@ -5,7 +5,7 @@ Represents companies using 0711
 
 from sqlalchemy import Column, String, Boolean, DateTime, func, ForeignKey
 from sqlalchemy.dialects.postgresql import UUID, JSONB
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, synonym
 import uuid
 
 from ..database import Base
@@ -71,10 +71,10 @@ class Customer(Base):
     # Active connections (actively connected via drag-and-drop with direction)
     # Example: {"input": ["pim", "dam", "erp"], "output": ["etim", "syndicate", "tax"]}
     active_connections = Column(JSONB, default={"input": [], "output": []})
-    
+
     # Legacy aliases for backward compatibility
-    enabled_mcps = enabled_connectors
-    connected_mcps = active_connections
+    enabled_mcps = synonym('enabled_connectors')
+    connected_mcps = synonym('active_connections')
 
     # Onboarding status tracking
     onboarding_status = Column(String(20), default="not_started")

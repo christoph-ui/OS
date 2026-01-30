@@ -4,22 +4,12 @@ import { useState } from 'react';
 import MCPsView from './MCPsView';
 import MCPConnectionDashboard from './mcps/MCPConnectionDashboard';
 import MCPMarketplace from './mcps/MCPMarketplace';
+import { colors } from '@/lib/theme';
 
 interface MCPsContainerProps {
   onQuestionClick: (question: string) => void;
   onSwitchToChat: () => void;
 }
-
-// Anthropic Brand Colors (matching page.tsx)
-const colors = {
-  dark: '#1e293b',
-  light: '#faf9f5',
-  midGray: '#94a3b8',
-  lightGray: '#e8e6dc',
-  orange: '#d97757',
-  blue: '#6a9bcc',
-  green: '#788c5d',
-};
 
 export default function MCPsContainer({ onQuestionClick, onSwitchToChat }: MCPsContainerProps) {
   const [activeTab, setActiveTab] = useState<'marketplace' | 'connections' | 'tools'>('marketplace');

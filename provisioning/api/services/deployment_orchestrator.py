@@ -93,17 +93,21 @@ class CustomerDeploymentOrchestrator:
             }
         }
 
-        # Add vLLM (Mixtral) service
+        # Add vLLM (Qwen 2.5 72B) service
         compose_config["services"]["vllm"] = {
             "image": "vllm/vllm-openai:latest",
             "container_name": f"{customer_id}-vllm",
+            "command": [
+                "--model", "Qwen/Qwen2.5-72B-Instruct",
+                "--tensor-parallel-size", "1",
+                "--max-model-len", "32768",
+                "--gpu-memory-utilization", "0.90",
+                "--enable-lora",
+                "--max-lora-rank", "64",
+                "--trust-remote-code",
+            ],
             "environment": {
-                "VLLM_MODEL": "mistralai/Mixtral-8x7B-Instruct-v0.1",
-                "VLLM_TENSOR_PARALLEL": "1",
-                "VLLM_GPU_MEMORY_UTILIZATION": "0.85",
-                "VLLM_MAX_MODEL_LEN": "32768",
-                "VLLM_ENABLE_LORA": "true",
-                "VLLM_MAX_LORA_RANK": "64",
+                "HUGGING_FACE_HUB_TOKEN": "${HF_TOKEN}",
             },
             "ports": [f"{ports['vllm']}:8000"],
             "volumes": [

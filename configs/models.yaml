@@ -1,0 +1,142 @@
+# 0711-OS Model Configuration
+# ============================
+# Recommended models for H200 (80GB VRAM)
+# Set VLLM_MODEL env var or edit docker-compose to switch
+
+models:
+  # =========================================================================
+  # RECOMMENDED: Qwen 2.5 72B (Best quality + multilingual)
+  # =========================================================================
+  qwen-72b:
+    name: "Qwen/Qwen2.5-72B-Instruct"
+    description: "Best overall quality, excellent German/multilingual"
+    vram: "~70GB"
+    context: 131072  # 128K native
+    recommended_max_len: 32768
+    license: "Apache 2.0"
+    strengths:
+      - "Best multilingual (German, English, Chinese)"
+      - "Strong reasoning and coding"
+      - "Good instruction following"
+    vllm_args:
+      - "--model Qwen/Qwen2.5-72B-Instruct"
+      - "--tensor-parallel-size 1"
+      - "--max-model-len 32768"
+      - "--gpu-memory-utilization 0.90"
+      - "--enable-lora"
+      - "--trust-remote-code"
+
+  # =========================================================================
+  # ALTERNATIVE: Llama 3.3 70B (Meta's latest)
+  # =========================================================================
+  llama-70b:
+    name: "meta-llama/Llama-3.3-70B-Instruct"
+    description: "Meta's latest, excellent quality"
+    vram: "~70GB"
+    context: 131072
+    recommended_max_len: 32768
+    license: "Llama 3.3 Community License"
+    strengths:
+      - "Very strong English"
+      - "Good multilingual"
+      - "Well-tested ecosystem"
+    vllm_args:
+      - "--model meta-llama/Llama-3.3-70B-Instruct"
+      - "--tensor-parallel-size 1"
+      - "--max-model-len 32768"
+      - "--gpu-memory-utilization 0.90"
+      - "--enable-lora"
+
+  # =========================================================================
+  # FAST: Qwen 2.5 32B (Good balance of speed/quality)
+  # =========================================================================
+  qwen-32b:
+    name: "Qwen/Qwen2.5-32B-Instruct"
+    description: "Fast with good quality, more room for LoRA"
+    vram: "~35GB"
+    context: 131072
+    recommended_max_len: 32768
+    license: "Apache 2.0"
+    strengths:
+      - "2x faster than 72B"
+      - "Still excellent multilingual"
+      - "Room for multiple LoRA adapters"
+    vllm_args:
+      - "--model Qwen/Qwen2.5-32B-Instruct"
+      - "--tensor-parallel-size 1"
+      - "--max-model-len 32768"
+      - "--gpu-memory-utilization 0.85"
+      - "--enable-lora"
+      - "--trust-remote-code"
+
+  # =========================================================================
+  # FASTEST: Mistral Small 24B
+  # =========================================================================
+  mistral-small:
+    name: "mistralai/Mistral-Small-Instruct-2409"
+    description: "Fast inference, good for high throughput"
+    vram: "~25GB"
+    context: 32768
+    recommended_max_len: 32768
+    license: "Apache 2.0"
+    strengths:
+      - "Very fast inference"
+      - "Good for many concurrent users"
+      - "Lots of room for LoRA adapters"
+    vllm_args:
+      - "--model mistralai/Mistral-Small-Instruct-2409"
+      - "--tensor-parallel-size 1"
+      - "--max-model-len 32768"
+      - "--gpu-memory-utilization 0.80"
+      - "--enable-lora"
+
+  # =========================================================================
+  # CODING: Qwen 2.5 Coder 32B
+  # =========================================================================
+  qwen-coder:
+    name: "Qwen/Qwen2.5-Coder-32B-Instruct"
+    description: "Best for code-heavy tasks"
+    vram: "~35GB"
+    context: 131072
+    recommended_max_len: 65536
+    license: "Apache 2.0"
+    strengths:
+      - "Best open-source coding model"
+      - "Great for technical documents"
+      - "Multi-language code support"
+    vllm_args:
+      - "--model Qwen/Qwen2.5-Coder-32B-Instruct"
+      - "--tensor-parallel-size 1"
+      - "--max-model-len 65536"
+      - "--gpu-memory-utilization 0.85"
+      - "--enable-lora"
+      - "--trust-remote-code"
+
+# =========================================================================
+# Multi-GPU Configurations (for 6x H200 cluster)
+# =========================================================================
+multi_gpu:
+  # When you have 6x H200 (480GB total)
+  qwen-72b-replicas:
+    description: "Run 6 separate Qwen 72B instances (1 per GPU)"
+    setup: "6x independent vLLM instances"
+    throughput: "~6x single GPU"
+    
+  deepseek-v3:
+    name: "deepseek-ai/DeepSeek-V3"
+    description: "671B MoE - needs all 6 GPUs"
+    vram: "~400GB (quantized)"
+    note: "Experimental - very large model"
+
+# =========================================================================
+# Embedding Models
+# =========================================================================
+embeddings:
+  default:
+    name: "intfloat/multilingual-e5-large"
+    description: "Best multilingual embeddings"
+    device: "cpu"  # Runs on CPU to save GPU for LLM
+    
+  alternative:
+    name: "BAAI/bge-m3"
+    description: "Good multilingual, slightly larger"

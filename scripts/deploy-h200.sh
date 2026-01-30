@@ -182,13 +182,21 @@ services:
 
   vllm-playground:
     image: vllm/vllm-openai:latest
+    command: >
+      --model Qwen/Qwen2.5-72B-Instruct
+      --tensor-parallel-size 1
+      --max-model-len 32768
+      --gpu-memory-utilization 0.90
+      --enable-lora
+      --max-lora-rank 64
+      --trust-remote-code
     environment:
-      VLLM_MODEL: mistralai/Mixtral-8x7B-Instruct-v0.1
       HUGGING_FACE_HUB_TOKEN: \${HF_TOKEN}
     ports:
       - "8000:8000"
     volumes:
       - models_cache:/root/.cache/huggingface
+      - lora_adapters:/loras
     deploy:
       resources:
         reservations:

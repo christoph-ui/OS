@@ -8,79 +8,37 @@
 ## ✅ COMPLETED
 
 - [x] E2E Tests passing (33/33)
-- [x] vLLM Multi-GPU setup on H200
+- [x] vLLM Multi-GPU setup on H200 ✅
 - [x] Website deployed
 - [x] Sidebar color softened (slate-800)
+- [x] Connector seeding fix pushed (`26ed086`) - GitHub Issue #1
 
 ---
 
-## 🔧 TASK A: Fix Connector Seeding
+## 🔧 TASK A: Connector Seeding (waiting on H200)
 
-Connector seeding has model/schema errors. Fix them.
-
-### Steps
+**Fix pushed** - H200 agent needs to pull and run:
 
 ```bash
-cd ~/OS
-
-# 1. Find the seeding script
-ls scripts/seed_connectors*.py
-
-# 2. Run with verbose output to see errors
-python scripts/seed_connectors_focused.py 2>&1
-
-# 3. Check the Connector model schema
-cat api/models/connector.py  # or wherever models are
-
-# 4. Fix mismatches between script and schema
-
-# 5. Re-run seeding - should complete without errors
+git pull origin main
 python scripts/seed_connectors_focused.py
 ```
 
-### Expected
-- All 18 connectors seeded successfully
-- No schema/model errors
+GitHub Issue: https://github.com/christoph-ui/OS/issues/1
 
 ---
 
-## 🎨 TASK B: Consolidate Theme System
+## 🎨 TASK B: Theme Consolidation
 
-53+ files have duplicate color definitions. Create single source of truth.
+Theme file created (`src/lib/theme.ts`). Migration of 51 files pending.
 
-### Steps
+**Done:**
+- [x] Created `console/frontend/src/lib/theme.ts`
+- [x] Includes all colors: dark, light, midGray, lightGray, orange, red, blue, green
 
-1. **Create theme file:**
-```typescript
-// console/frontend/src/lib/theme.ts
-export const colors = {
-  dark: '#1e293b',      // slate-800
-  light: '#faf9f5',
-  midGray: '#94a3b8',   // slate-400
-  lightGray: '#e8e6dc',
-  orange: '#d97757',
-  red: '#d75757',
-} as const;
-
-export type ColorKey = keyof typeof colors;
-```
-
-2. **Update all files to import:**
-```typescript
-import { colors } from '@/lib/theme';
-// Then use: colors.dark, colors.orange, etc.
-```
-
-3. **Bulk update with sed/find:**
-```bash
-# Remove inline color definitions
-# Replace with imports
-```
-
-### Expected
-- Single theme.ts file
-- All 53 files import from it
-- No more inline `const colors = {...}`
+**Remaining:**
+- [ ] Migrate 51 files to import from theme.ts
+- [ ] Remove inline `const colors = {...}` definitions
 
 ---
 
@@ -88,5 +46,5 @@ import { colors } from '@/lib/theme';
 
 | Task | Status |
 |------|--------|
-| A: Connector Seeding | 🔴 Blocked |
-| B: Theme Consolidation | 🟡 Ready |
+| A: Connector Seeding | 🟡 Fix pushed, awaiting H200 |
+| B: Theme Consolidation | 🟡 Theme created, migration pending |

@@ -8,9 +8,9 @@ import ProgressModal from '@/components/ProgressModal';
 import { useProgress } from '@/hooks/useProgress';
 
 const colors = {
-  dark: '#141413',
+  dark: '#1e293b',
   light: '#faf9f5',
-  midGray: '#b0aea5',
+  midGray: '#94a3b8',
   lightGray: '#e8e6dc',
   orange: '#d97757',
   green: '#788c5d',

@@ -57,12 +57,12 @@ export default function MCPCard({ mcp, isSubscribed, onSubscribe, onCardClick }:
           {/* Icon - Monochrome geometric */}
           <div
             className="w-14 h-14 rounded-lg flex items-center justify-center border border-[#e8e6dc] flex-shrink-0"
-            style={{ backgroundColor: '#141413' + '08' }}
+            style={{ backgroundColor: '#1e293b' + '08' }}
           >
             <span
               className="font-semibold text-lg"
               style={{
-                color: '#141413' + '99',
+                color: '#1e293b' + '99',
                 fontFamily: fonts.heading,
                 letterSpacing: '-0.5px'
               }}

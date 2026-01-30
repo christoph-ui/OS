@@ -4,9 +4,9 @@ import { useRouter, usePathname } from 'next/navigation';
 import { LayoutDashboard, Users, Package, UserCheck, Activity, LogOut, Shield, Server, Settings, UserCog } from 'lucide-react';
 
 const colors = {
-  dark: '#141413',
+  dark: '#1e293b',  // slate-800 - softer than black
   light: '#faf9f5',
-  midGray: '#b0aea5',
+  midGray: '#94a3b8',  // slate-400 - better contrast
   lightGray: '#e8e6dc',
   orange: '#d97757',
   red: '#d75757',

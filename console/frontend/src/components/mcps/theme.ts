@@ -10,9 +10,9 @@
 
 // Anthropic Brand Colors (matching main console)
 export const colors = {
-  dark: '#141413',      // Almost black - primary text, dark backgrounds
+  dark: '#1e293b',      // Almost black - primary text, dark backgrounds
   light: '#faf9f5',     // Warm off-white - light backgrounds
-  midGray: '#b0aea5',   // Muted taupe - secondary text, icons
+  midGray: '#94a3b8',   // Muted taupe - secondary text, icons
   lightGray: '#e8e6dc', // Warm light gray - borders, subtle backgrounds
   orange: '#d97757',    // Muted terracotta - ONLY for accents, CTAs, active states
   blue: '#6a9bcc',      // Muted blue - rare subtle accent

@@ -7,7 +7,7 @@ import { ToastProvider } from '@/components/Toast';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 const colors = {
-  dark: '#141413',
+  dark: '#1e293b',
   light: '#faf9f5',
 };
 

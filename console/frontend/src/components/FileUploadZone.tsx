@@ -3,10 +3,10 @@
 import { useState } from 'react';
 
 const colors = {
-  dark: '#141413',
+  dark: '#1e293b',
   lightGray: '#e8e6dc',
   orange: '#d97757',
-  midGray: '#b0aea5',
+  midGray: '#94a3b8',
 };
 
 interface FileUploadZoneProps {

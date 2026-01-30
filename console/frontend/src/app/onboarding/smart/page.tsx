@@ -109,7 +109,7 @@ export default function SmartOnboarding() {
       files.forEach(file => formData.append('files', file));
 
       const token = localStorage.getItem('0711_token');
-      const response = await fetch('http://localhost:4080/api/smart-onboarding/upload', {
+      const response = await fetch('http://localhost:4010/api/smart-onboarding/upload', {
         method: 'POST',
         headers: token ? { 'Authorization': `Bearer ${token}` } : {},
         body: formData,
@@ -124,7 +124,7 @@ export default function SmartOnboarding() {
         // Poll for analysis results
         setTimeout(async () => {
           const analysisRes = await fetch(
-            `http://localhost:4080/api/smart-onboarding/analysis/${data.upload_id}/summary`,
+            `http://localhost:4010/api/smart-onboarding/analysis/${data.upload_id}/summary`,
             { headers: token ? { 'Authorization': `Bearer ${token}` } : {} }
           );
           

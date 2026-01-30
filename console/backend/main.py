@@ -36,7 +36,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from .config import config
-from .routes import chat, mcps, ingest, data, categories, products, syndicate, mcp_marketplace, tender, stats
+from .routes import chat, mcps, ingest, data, categories, products, syndicate, mcp_marketplace, tender, stats, smart_onboarding
 from .auth import routes as auth_routes
 from .auth.store import init_default_users
 
@@ -116,6 +116,7 @@ app.include_router(tender.router, prefix="/api/tender", tags=["tender"])
 app.include_router(syndicate.router, prefix="/api/syndicate", tags=["syndicate"])
 app.include_router(mcp_marketplace.router, prefix="/api/mcp", tags=["mcp-marketplace"])
 app.include_router(stats.router, tags=["stats"])  # NEW: Customer stats for MCP Central
+app.include_router(smart_onboarding.router, prefix="/api", tags=["smart-onboarding"])
 
 
 @app.get("/health")

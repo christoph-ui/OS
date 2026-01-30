@@ -1,6 +1,5 @@
-# Task: Console Improvements + Connector Seeding
+# 0711-OS Status
 
-**Priority:** HIGH  
 **Updated:** 2026-01-30
 
 ---
@@ -8,33 +7,26 @@
 ## ✅ COMPLETED
 
 - [x] E2E Tests passing (33/33)
-- [x] vLLM Multi-GPU setup on H200 ✅
+- [x] vLLM Multi-GPU on H200
 - [x] Website deployed
 - [x] Sidebar color softened (slate-800)
-- [x] Connector seeding fix pushed (`26ed086`) - GitHub Issue #1
+- [x] **Connector seeding** - 6 categories, 18 connectors ✅
+- [x] **Model relationship fixes:**
+  - ConnectionCredential FK renames
+  - Connector credentials relationship
+  - Column aliases with synonym()
+  - Workflow FK update
+  - Deleted orphaned mcp_developer.py
 
 ---
 
-## 🔧 TASK A: Connector Seeding (waiting on H200)
+## 🎨 REMAINING: Theme Consolidation
 
-**Fix pushed** - H200 agent needs to pull and run:
-
-```bash
-git pull origin main
-python scripts/seed_connectors_focused.py
-```
-
-GitHub Issue: https://github.com/christoph-ui/OS/issues/1
-
----
-
-## 🎨 TASK B: Theme Consolidation
-
-Theme file created (`src/lib/theme.ts`). Migration of 51 files pending.
+Theme file created (`src/lib/theme.ts`). Migration pending.
 
 **Done:**
 - [x] Created `console/frontend/src/lib/theme.ts`
-- [x] Includes all colors: dark, light, midGray, lightGray, orange, red, blue, green
+- [x] All colors defined: dark, light, midGray, lightGray, orange, red, blue, green
 
 **Remaining:**
 - [ ] Migrate 51 files to import from theme.ts
@@ -42,9 +34,13 @@ Theme file created (`src/lib/theme.ts`). Migration of 51 files pending.
 
 ---
 
-## 📊 Status
+## 📊 Deployment Status
 
-| Task | Status |
-|------|--------|
-| A: Connector Seeding | 🟡 Fix pushed, awaiting H200 |
-| B: Theme Consolidation | 🟡 Theme created, migration pending |
+| Component | Status |
+|-----------|--------|
+| Console (4020) | ✅ Running |
+| Website (4000) | ✅ Running |
+| API (4080) | ✅ Running |
+| vLLM | ✅ Running |
+| Connectors | ✅ 18 seeded |
+| Database | ✅ Migrated |

@@ -1,8 +1,43 @@
-# Task: Get Website Running NOW + vLLM Multi-GPU Setup
+# Task: Create Admin User + Website + vLLM Setup
 
 **Priority:** URGENT  
 **Assigned:** Claude Code (H200)  
-**Updated:** 2026-01-30
+**Updated:** 2025-01-30
+
+---
+
+## 🚨 PRIORITY 0: Create Platform Admin User NOW!
+
+**Boss needs to log in!** Login is timing out - create admin user first:
+
+```bash
+cd ~/OS
+
+# Create platform admin for Christoph
+ADMIN_EMAIL=christoph@0711.io \
+ADMIN_FIRST_NAME=Christoph \
+ADMIN_PASSWORD=0711Admin2025! \
+python scripts/seed_platform_admin.py
+```
+
+**Expected output:**
+```
+✓ Platform admin created successfully
+  Email: christoph@0711.io
+  Name: Christoph
+  Role: platform_admin
+```
+
+**Test login immediately:**
+```bash
+curl -X POST http://localhost:4010/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email": "christoph@0711.io", "password": "0711Admin2025!"}'
+```
+
+Should return JWT token = SUCCESS!
+
+**Report back when done!**
 
 ---
 

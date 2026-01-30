@@ -1,0 +1,96 @@
+version: '3.8'
+
+# vLLM Multi-GPU Setup for 2x H200 (280GB VRAM)
+# Tensor Parallel across both GPUs for maximum speed
+
+services:
+  vllm:
+    image: vllm/vllm-openai:latest
+    container_name: 0711-vllm
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all  # Use both H200 GPUs
+              capabilities: [gpu]
+    environment:
+      - HF_TOKEN=${HF_TOKEN}
+      - VLLM_TENSOR_PARALLEL_SIZE=2
+      - CUDA_VISIBLE_DEVICES=0,1
+    command: >
+      --model Qwen/Qwen2.5-72B-Instruct
+      --tensor-parallel-size 2
+      --gpu-memory-utilization 0.90
+      --max-model-len 32768
+      --dtype auto
+      --trust-remote-code
+      --enable-lora
+      --max-loras 100
+      --max-lora-rank 64
+      --host 0.0.0.0
+      --port 8000
+      --api-key ${VLLM_API_KEY:-}
+    volumes:
+      # LoRA adapters per customer
+      - ./adapters:/app/adapters:ro
+      # HuggingFace cache (persist model downloads)
+      - huggingface_cache:/root/.cache/huggingface
+      # Faster model loading with local cache
+      - ./models:/models:ro
+    ports:
+      - "7005:8000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 300s  # 5 min for model loading
+    # Shared memory for tensor parallel
+    shm_size: '32gb'
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+
+  # Alternative: Qwen Coder for code-specific tasks
+  vllm-coder:
+    image: vllm/vllm-openai:latest
+    container_name: 0711-vllm-coder
+    runtime: nvidia
+    profiles:
+      - coder  # Only start with: docker compose --profile coder up
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['1']  # Use GPU 1 only
+              capabilities: [gpu]
+    environment:
+      - HF_TOKEN=${HF_TOKEN}
+    command: >
+      --model Qwen/Qwen2.5-Coder-32B-Instruct
+      --gpu-memory-utilization 0.85
+      --max-model-len 32768
+      --dtype auto
+      --trust-remote-code
+      --host 0.0.0.0
+      --port 8000
+    volumes:
+      - huggingface_cache:/root/.cache/huggingface
+    ports:
+      - "7006:8000"
+    shm_size: '8gb'
+
+volumes:
+  huggingface_cache:
+    driver: local
+
+networks:
+  default:
+    name: 0711-network
+    external: true

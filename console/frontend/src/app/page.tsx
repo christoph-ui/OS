@@ -6,7 +6,7 @@ import { colors } from '@/lib/theme';
 import { 
   Sparkles, Zap, Database, Share2, Shield, Clock,
   ArrowRight, Check, MessageSquare, BarChart3, Package,
-  Users, Briefcase, Building2, Star, GraduationCap, Handshake
+  Users, Briefcase, Building2, Star, GraduationCap, HeartHandshake
 } from 'lucide-react';
 
 export default function HomePage() {
@@ -83,7 +83,7 @@ export default function HomePage() {
       title: 'For Partners',
       subtitle: 'Agencies & Consultants',
       description: 'Manage multiple clients, white-label solutions, earn commissions.',
-      icon: <Handshake size={32} />,
+      icon: <HeartHandshake size={32} />,
       color: colors.green || '#788c5d',
       actions: [
         { label: 'Partner Portal', href: '/partner', primary: false },

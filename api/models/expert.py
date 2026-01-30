@@ -31,7 +31,10 @@ class Expert(Base):
 
     # Specializations
     specializations = Column(ARRAY(String))  # ["tax", "legal", "finance"]
-    mcp_expertise = Column(ARRAY(String))  # ["CTAX", "LAW", "FP&A"]
+    connector_expertise = Column(ARRAY(String))  # ["CTAX", "LAW", "FP&A"]
+    
+    # Legacy alias for backward compatibility
+    mcp_expertise = connector_expertise
 
     # Credentials
     certifications = Column(JSONB)  # List of certifications
@@ -70,9 +73,20 @@ class Expert(Base):
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
     last_active_at = Column(DateTime(timezone=True))
 
+    # Stripe Connect (for payments)
+    stripe_account_id = Column(String(255), unique=True, index=True)
+    stripe_onboarding_complete = Column(Boolean, default=False)
+    stripe_charges_enabled = Column(Boolean, default=False)
+    stripe_payouts_enabled = Column(Boolean, default=False)
+
     # Relationships
     engagements = relationship("Engagement", back_populates="expert", cascade="all, delete-orphan")
     tasks = relationship("Task", back_populates="expert")
+    bookings = relationship("Booking", back_populates="expert", cascade="all, delete-orphan")
+    availability_slots = relationship("ExpertAvailability", back_populates="expert", cascade="all, delete-orphan")
+    blocked_times = relationship("ExpertBlockedTime", back_populates="expert", cascade="all, delete-orphan")
+    payouts = relationship("ExpertPayout", back_populates="expert", cascade="all, delete-orphan")
+    earnings = relationship("ExpertEarnings", back_populates="expert", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<Expert {self.name} - {self.title}>"

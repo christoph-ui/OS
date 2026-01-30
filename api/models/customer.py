@@ -64,13 +64,17 @@ class Customer(Base):
     # Status
     status = Column(String(20), default="active")  # active, churned, suspended
 
-    # Enabled MCPs (shared services, not deployed per-customer)
+    # Enabled connectors (shared services, not deployed per-customer)
     # Example: {"etim": true, "ctax": false, "law": false}
-    enabled_mcps = Column(JSONB, default={})
+    enabled_connectors = Column(JSONB, default={})
 
-    # Connected MCPs (actively connected via drag-and-drop with direction)
+    # Active connections (actively connected via drag-and-drop with direction)
     # Example: {"input": ["pim", "dam", "erp"], "output": ["etim", "syndicate", "tax"]}
-    connected_mcps = Column(JSONB, default={"input": [], "output": []})
+    active_connections = Column(JSONB, default={"input": [], "output": []})
+    
+    # Legacy aliases for backward compatibility
+    enabled_mcps = enabled_connectors
+    connected_mcps = active_connections
 
     # Onboarding status tracking
     onboarding_status = Column(String(20), default="not_started")
@@ -99,6 +103,10 @@ class Customer(Base):
 
     # Marketplace relationships
     engagements = relationship("Engagement", back_populates="customer", cascade="all, delete-orphan")
+    bookings = relationship("Booking", back_populates="customer", cascade="all, delete-orphan")
+    
+    # Connector relationships
+    connections = relationship("Connection", back_populates="customer", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<Customer {self.company_name} ({self.contact_email})>"

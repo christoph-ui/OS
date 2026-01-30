@@ -29,9 +29,12 @@ class Engagement(Base):
     focus_area = Column(String(255))  # e.g., "Tax & Compliance"
 
     # Scope
-    mcps_used = Column(ARRAY(String))  # MCPs being utilized in this engagement
+    connectors_used = Column(ARRAY(String))  # Connectors being utilized in this engagement
     deliverables = Column(Text)  # Description of deliverables
     estimated_hours = Column(Integer)
+    
+    # Legacy alias
+    mcps_used = connectors_used
 
     # Status
     status = Column(String(20), default="active")  # pending, active, paused, completed, cancelled
@@ -56,6 +59,8 @@ class Engagement(Base):
     customer = relationship("Customer", back_populates="engagements")
     expert = relationship("Expert", back_populates="engagements")
     tasks = relationship("Task", back_populates="engagement", cascade="all, delete-orphan")
+    booking = relationship("Booking", back_populates="engagement", uselist=False)
+    payouts = relationship("ExpertPayout", back_populates="engagement")
 
     def __repr__(self):
         return f"<Engagement {self.title} - {self.status}>"

@@ -53,6 +53,7 @@ class Deployment(Base):
     customer = relationship("Customer", back_populates="deployments")
     usage_metrics = relationship("UsageMetric", back_populates="deployment")
     support_tickets = relationship("SupportTicket", back_populates="deployment")
+    connections = relationship("Connection", back_populates="deployment")
 
     def __repr__(self):
         return f"<Deployment {self.name} - {self.status}>"

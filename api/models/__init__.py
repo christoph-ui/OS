@@ -2,6 +2,7 @@
 SQLAlchemy database models
 """
 
+# Core models
 from .user import User
 from .customer import Customer
 from .partner import Partner
@@ -12,14 +13,20 @@ from .usage import UsageMetric
 from .support_ticket import SupportTicket
 from .audit_log import AuditLog
 
-# Marketplace models
+# Connector models (formerly MCP)
+from .connector import Connector, MCP  # MCP is alias for backward compatibility
+from .connection import Connection, MCPInstallation  # MCPInstallation is alias
+from .connector_developer import ConnectorDeveloper, MCPDeveloper  # MCPDeveloper is alias
+from .connector_category import ConnectorCategory
+from .connector_review import ConnectorReview
+from .connection_credential import ConnectionCredential, ConnectionType, ConnectionStatus
+
+# Expert marketplace models
 from .expert import Expert
-from .mcp import MCP
-from .mcp_developer import MCPDeveloper
 from .engagement import Engagement
 from .task import Task
-from .mcp_installation import MCPInstallation
-from .connection_credential import ConnectionCredential, ConnectionType, ConnectionStatus
+from .booking import Booking, ExpertAvailability, ExpertBlockedTime
+from .expert_payout import ExpertPayout, ExpertEarnings
 
 # Workflow models
 from .workflow import Workflow
@@ -32,6 +39,7 @@ from .workflow_step_log import WorkflowStepLog
 from .medusa_registration import MedusaRegistration
 
 __all__ = [
+    # Core
     "User",
     "Customer",
     "Partner",
@@ -41,22 +49,39 @@ __all__ = [
     "UsageMetric",
     "SupportTicket",
     "AuditLog",
-    # Marketplace
-    "Expert",
-    "MCP",
-    "MCPDeveloper",
-    "Engagement",
-    "Task",
-    "MCPInstallation",
+    
+    # Connectors (new)
+    "Connector",
+    "Connection",
+    "ConnectorDeveloper",
+    "ConnectorCategory",
+    "ConnectorReview",
     "ConnectionCredential",
     "ConnectionType",
     "ConnectionStatus",
+    
+    # Legacy aliases (backward compatibility)
+    "MCP",
+    "MCPInstallation",
+    "MCPDeveloper",
+    
+    # Expert marketplace
+    "Expert",
+    "Engagement",
+    "Task",
+    "Booking",
+    "ExpertAvailability",
+    "ExpertBlockedTime",
+    "ExpertPayout",
+    "ExpertEarnings",
+    
     # Workflows
     "Workflow",
     "WorkflowDefinition",
     "WorkflowSubscription",
     "WorkflowExecution",
     "WorkflowStepLog",
-    # Medusa
+    
+    # Other
     "MedusaRegistration",
 ]

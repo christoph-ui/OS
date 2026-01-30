@@ -1,232 +1,183 @@
-# Task: Deploy & Test 0711-OS Platform
+# Task: Complete H200 Deployment with Mistral Large
 
 **Priority:** High  
 **Assigned:** Claude Code (H200)  
-**Status:** Ready for Testing
-**Updated:** 2026-01-30 (Session 2)
+**Status:** Continue Deployment
+**Updated:** 2026-01-30
 
 ---
 
-## 🚀 MAJOR UPDATES PUSHED TODAY
+## 🎯 IMMEDIATE ACTION
 
-### 1. Product Intelligence System
-Auto-analyzes uploaded products and recommends connectors:
-- Field detection (any naming convention)
-- Category detection (electrical, automotive, industrial)
-- Completeness analysis
-- Connector auto-enable logic
+Infrastructure is running! Now configure Mistral Large and deploy app services.
 
-### 2. Smart Onboarding Frontend
-Zero-config "dump your data, we figure it out":
-- `/onboarding` - Upload → Analyze → Deploy → Chat
-
-### 3. New Frontend Pages
-- `/connectors` - Docker-style connector catalog
-- `/models` - AI models hub (pull like Docker)
-- `/experts` - Expert marketplace
-- `/experts/[id]` - Expert booking flow
-- `/bookings` - My bookings
-
-### 4. Focused Connector Catalog
-18 business-critical connectors:
-- TENDER, WETTBEWERB, PRICE MONITOR
-- AMAZON, SHOPIFY, IDEALO, GOOGLE SHOPPING
-- DATANORM, BMECAT, PUBLISH
-- ETIM, ECLASS
-
----
-
-## ✅ TASK 1: Pull Latest & Run Migrations
+### Step 1: Add Mistral API Key
 
 ```bash
 cd ~/OS
-git pull origin main
 
-# Check what's new
-git log --oneline -10
+# Add Mistral API key to .env
+cat >> .env << 'EOF'
 
-# Activate venv or use Docker
-source venv/bin/activate
+# Mistral AI
+MISTRAL_API_KEY=FHvbqUs1rr4X3q97fN1LqzUCj6yjiF3J
+LLM_PROVIDER=mistral
+LLM_MODEL=mistral-large-latest
+EOF
 
-# Run migrations
-alembic upgrade head
-
-# Seed the NEW focused connector catalog
-python scripts/seed_connectors_focused.py
+echo "✓ Mistral API key added"
 ```
 
----
+### Step 2: Skip vLLM (using Mistral API instead)
 
-## ✅ TASK 2: Test Product Intelligence API
+We'll use Mistral's hosted API instead of local vLLM. This means:
+- No GPU needed for LLM inference
+- Faster startup
+- Mistral Large 2 is very capable (128K context)
 
-```bash
-# Test the demo endpoint
-curl http://localhost:4080/api/product-intelligence/quick-analysis | jq '.report | {category: .primary_category, quality: .completeness_score, connectors: .auto_enabled_connectors}'
-
-# Expected output:
-# {
-#   "category": "electrical",
-#   "quality": 78.5,
-#   "connectors": ["etim", "publish", "datanorm"]
-# }
-```
-
----
-
-## ✅ TASK 3: Test Smart Onboarding API
+### Step 3: Deploy Application Services
 
 ```bash
-# Test with demo data
-curl -X POST http://localhost:4080/api/smart-onboarding/demo/analyze | jq '.report | {products: .metrics.total_products, model: .business_model.type, value: .value}'
+# Build and start app services
+docker compose -f docker-compose.h200.yml up -d api
 
-# Expected output:
-# {
-#   "products": 125000,
-#   "model": "B2B Distributor",
-#   "value": { "revenue_opportunity": "€12.5M", ... }
-# }
-```
-
----
-
-## ✅ TASK 4: Test Connector Catalog API
-
-```bash
-# Get categories
-curl http://localhost:4080/api/connectors/categories | jq '.categories[] | {name: .display_name, count: .connector_count}'
-
-# Get featured connectors
-curl http://localhost:4080/api/connectors/featured | jq '.connectors[] | {name: .display_name, price: .price_per_month_cents}'
-
-# Search for tender connectors
-curl "http://localhost:4080/api/connectors?category=tenders" | jq '.connectors[] | .display_name'
-```
-
----
-
-## ✅ TASK 5: Frontend Build Test
-
-```bash
-cd console/frontend
-
-# Install dependencies (if needed)
-npm install
-
-# Build
-npm run build
-
-# If build succeeds, start
-npm run dev
-```
-
-Then check these pages work:
-- http://localhost:3000/connectors
-- http://localhost:3000/models
-- http://localhost:3000/experts
-- http://localhost:3000/onboarding
-
----
-
-## ✅ TASK 6: Full Docker Deployment
-
-```bash
-# Build all containers
-docker compose build
-
-# Start infrastructure
-docker compose up -d postgres redis minio
-
-# Wait, then run migrations
+# Wait for API to be healthy
 sleep 10
-docker compose run --rm api alembic upgrade head
-docker compose run --rm api python scripts/seed_connectors_focused.py
+curl http://localhost:4080/health
 
-# Start AI services
-docker compose up -d vllm embeddings
+# Start frontend services
+docker compose -f docker-compose.h200.yml up -d console-backend console-frontend website
 
-# Wait for vLLM to load model (check logs)
-docker compose logs -f vllm
+# Check all services
+docker compose -f docker-compose.h200.yml ps
+```
 
-# Once ready, start full stack
-docker compose up -d
+### Step 4: Run Database Migrations
+
+```bash
+# Run migrations
+docker compose -f docker-compose.h200.yml exec api alembic upgrade head
+
+# Seed connector catalog
+docker compose -f docker-compose.h200.yml exec api python scripts/seed_connectors_focused.py
+```
+
+### Step 5: Test APIs
+
+```bash
+# Health check
+curl http://localhost:4080/health | jq
+
+# Test connector catalog
+curl http://localhost:4080/api/connectors/categories | jq
+
+# Test product intelligence (demo)
+curl -X POST http://localhost:4080/api/product-intelligence/quick-analysis | jq '.report.primary_category'
+
+# Test smart onboarding (demo)
+curl -X POST http://localhost:4080/api/smart-onboarding/demo/analyze | jq '.report.summary'
 ```
 
 ---
 
-## 📊 Report Back
+## 📊 Current Status
 
-Update this section after testing:
+### ✅ Running (from previous deployment)
+| Service | Port | Status |
+|---------|------|--------|
+| PostgreSQL | 7000 | ✅ Running |
+| Redis | 7001 | ✅ Running |
+| MinIO | 7002/7003 | ✅ Running |
+| Embeddings | 7004 | ✅ Running |
+
+### 🚀 To Deploy Now
+| Service | Port | Status |
+|---------|------|--------|
+| API | 4080 | 🔄 Deploy |
+| Console Backend | 4010 | 🔄 Deploy |
+| Console Frontend | 4020 | 🔄 Deploy |
+| Website | 4000 | 🔄 Deploy |
+
+### ⏸️ Skipped
+| Service | Reason |
+|---------|--------|
+| vLLM | Using Mistral API instead |
+
+---
+
+## 🔑 API Keys Status
 
 ```yaml
-Status: [ ] Pending / [ ] Testing / [ ] Complete / [ ] Issues
+Mistral: ✅ FHvb...F3J (just added)
+HuggingFace: ⏸️ Not needed (using Mistral API)
+Anthropic: ❓ Add if available for better Product Intelligence
+```
 
-Git Pull:
-  - Latest commit: 
-  - Files changed: 
+---
+
+## 📋 Report After Completion
+
+Update this:
+
+```yaml
+Deployment Status: [ ] Pending / [ ] Complete / [ ] Issues
+
+Services Running:
+  api: 
+  console-backend:
+  console-frontend:
+  website:
 
 Migrations:
-  - Status: 
-  - Tables created: 
+  status:
+  tables:
 
 Connector Seed:
-  - Categories: 
-  - Connectors: 
+  categories:
+  connectors:
 
 API Tests:
-  product-intelligence: [ ] Pass / [ ] Fail
-  smart-onboarding: [ ] Pass / [ ] Fail
-  connectors: [ ] Pass / [ ] Fail
+  /health:
+  /api/connectors:
+  /api/product-intelligence:
+  /api/smart-onboarding:
 
-Frontend Build:
-  - Status: 
-  - Errors: 
-
-Docker:
-  - Containers running: 
-  - GPU utilization: 
-  - vLLM model loaded: 
+Access URLs:
+  API Docs: http://<IP>:4080/docs
+  Console: http://<IP>:4020
+  Website: http://<IP>:4000
 
 Notes:
 ```
 
 ---
 
-## 🔗 Expected Endpoints After Deploy
+## 🌐 Final Access Points
 
-| Endpoint | Test |
-|----------|------|
-| `/api/connectors` | `curl localhost:4080/api/connectors` |
-| `/api/connectors/categories` | `curl localhost:4080/api/connectors/categories` |
-| `/api/product-intelligence/quick-analysis` | `curl -X POST localhost:4080/api/product-intelligence/quick-analysis` |
-| `/api/smart-onboarding/demo/analyze` | `curl -X POST localhost:4080/api/smart-onboarding/demo/analyze` |
-| `/health` | `curl localhost:4080/health` |
+After deployment completes:
 
----
-
-## 🐛 Known Issues to Watch
-
-1. **react-dropzone** - Make sure `npm install` runs in frontend
-2. **ConnectorCategory model** - If table doesn't exist, seed will fail
-3. **Anthropic API key** - Product Intelligence works better with Claude
+| Service | URL |
+|---------|-----|
+| **API Docs** | http://IP:4080/docs |
+| **Console (Chat)** | http://IP:4020 |
+| **Website** | http://IP:4000 |
+| **MinIO Console** | http://IP:7003 |
 
 ---
 
-## Files Changed Today
+## 💡 Note on LLM Provider
 
+The system now supports multiple LLM providers:
+
+```python
+# In code, the LLM provider is selected via env:
+LLM_PROVIDER=mistral  # or "anthropic", "openai", "vllm"
+LLM_MODEL=mistral-large-latest
+
+# For chat completions, the API routes to Mistral
 ```
-NEW:
-├── api/services/product_intelligence_service.py (34KB)
-├── api/services/intelligent_onboarding_service.py (30KB)
-├── api/routes/product_intelligence.py
-├── api/routes/intelligent_onboarding.py
-├── scripts/seed_connectors_focused.py
-├── docs/PRODUCT_INTELLIGENCE_FLOW.md
-├── docs/INTELLIGENT_ONBOARDING.md
-└── console/frontend/src/app/
-    ├── connectors/page.tsx
-    ├── models/page.tsx
-    ├── experts/page.tsx
-    ├── experts/[id]/page.tsx
-    ├── bookings/page.tsx
-    └── onboarding/page.tsx
+
+If you want to add Anthropic for Product Intelligence (better at German text analysis):
+```bash
+echo "ANTHROPIC_API_KEY=sk-ant-..." >> .env
 ```

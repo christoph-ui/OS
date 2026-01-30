@@ -41,6 +41,54 @@ Should return JWT token = SUCCESS!
 
 ---
 
+## 🚨 PRIORITY 0.5: Build and Deploy API Service (Port 4080)
+
+**Build the Control Plane API and deploy it:**
+
+```bash
+cd ~/OS
+
+# Build the API Docker image
+docker build -t 0711-api:latest -f Dockerfile .
+
+# Stop existing API container if running
+docker stop 0711-api 2>/dev/null || true
+docker rm 0711-api 2>/dev/null || true
+
+# Run the API service
+docker run -d \
+  --name 0711-api \
+  --network 0711-network \
+  -p 4080:8080 \
+  -e DATABASE_URL=postgresql://0711:0711_dev_password@0711-postgres:5432/0711_control \
+  -e REDIS_URL=redis://0711-redis:6379 \
+  -e DEBUG=true \
+  -e JWT_SECRET=${JWT_SECRET:-super-secret-key-change-in-production} \
+  -e CORS_ORIGINS='["http://localhost:4020","http://192.168.145.10:4020","http://192.168.145.10:4000"]' \
+  --restart unless-stopped \
+  0711-api:latest
+
+# Wait for startup
+sleep 5
+
+# Run database migrations
+docker exec 0711-api alembic upgrade head
+
+# Seed data
+docker exec 0711-api python scripts/seed_connectors_focused.py
+
+# Verify it's running
+curl http://localhost:4080/health
+curl http://localhost:4080/docs
+```
+
+**Expected:**
+- API responding on port 4080
+- `/docs` shows Swagger UI
+- Health check returns OK
+
+---
+
 ## 🚨 PRIORITY 1: Website JETZT starten!
 
 Der Chef will klicken! Website first, vLLM optimization later.

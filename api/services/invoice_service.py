@@ -8,8 +8,16 @@ from datetime import date, timedelta
 from decimal import Decimal
 from typing import Optional
 import jinja2
-from weasyprint import HTML
 from sqlalchemy.orm import Session
+
+# Optional weasyprint import (requires system libs)
+try:
+    from weasyprint import HTML
+    WEASYPRINT_AVAILABLE = True
+except (ImportError, OSError):
+    HTML = None
+    WEASYPRINT_AVAILABLE = False
+    logging.warning("WeasyPrint not available - PDF generation disabled")
 
 from ..models.invoice import Invoice
 from ..models.customer import Customer
@@ -221,6 +229,10 @@ class InvoiceService:
         pdf_dir.mkdir(parents=True, exist_ok=True)
         pdf_path = pdf_dir / pdf_filename
 
+        if not WEASYPRINT_AVAILABLE:
+            logger.warning(f"WeasyPrint not available - skipping PDF generation for {invoice.invoice_number}")
+            return None
+            
         HTML(string=html_content).write_pdf(str(pdf_path))
 
         logger.info(f"Generated PDF invoice: {pdf_path}")
